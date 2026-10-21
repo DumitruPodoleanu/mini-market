@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MiniMarket.Api/MiniMarket.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Catalog/">
+    <Project Path="src/Modules/Catalog/MiniMarket.Catalog/MiniMarket.Catalog.csproj" />
+  </Folder>
+</Solution>
