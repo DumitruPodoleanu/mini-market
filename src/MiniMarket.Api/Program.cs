@@ -1,6 +1,11 @@
+using MiniMarket.Catalog;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCatalogModule();
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapCatalogEndpoints();
 
 app.Run();
