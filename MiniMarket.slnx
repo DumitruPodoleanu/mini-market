@@ -6,4 +6,7 @@
   <Folder Name="/src/Modules/Catalog/">
     <Project Path="src/Modules/Catalog/MiniMarket.Catalog/MiniMarket.Catalog.csproj" />
   </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/MiniMarket.Shared/MiniMarket.Shared.csproj" />
+  </Folder>
 </Solution>
