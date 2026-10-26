@@ -21,7 +21,7 @@ internal sealed class Category
             throw new DomainException("Category slug cannot be empty.");
 
         if (!Regex.IsMatch(slug, "^[a-z0-9]+(-[a-z0-9]+)*$"))
-            throw new DomainException("Category Slug must be lowercase letters, digits and dashes.");
+            throw new DomainException("Category slug must be lowercase letters, digits and dashes.");
 
         Id = id;
         Name = name.Trim();

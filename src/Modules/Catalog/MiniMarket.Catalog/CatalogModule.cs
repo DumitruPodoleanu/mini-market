@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using MiniMarket.Catalog.Features.ListProducts;
 
 namespace MiniMarket.Catalog;
 
@@ -20,8 +21,9 @@ public static class CatalogModule
             options.UseNpgsql(connectionString, npgsql =>
                 npgsql.MigrationsHistoryTable("__EFMigrationsHistory", CatalogDbContext.Schema)));
 
-        services.AddScoped<IProductRepository, EfMemoryProductRepository>();
+        services.AddScoped<IProductRepository, EfProductRepository>();
         services.AddScoped<GetProductHandler>();
+        services.AddScoped<ListProductsHandler>();
         return services;
     }
 
@@ -29,6 +31,7 @@ public static class CatalogModule
     {
         var products = app.MapGroup("/api/products");
         GetProductEndpoint.Map(products);
+        ListProductsEndpoint.Map(products);
         return app;
     }
 }

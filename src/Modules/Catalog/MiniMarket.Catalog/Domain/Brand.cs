@@ -20,7 +20,7 @@ internal sealed class Brand
         if (string.IsNullOrWhiteSpace(slug))
             throw new DomainException("Brand slug cannot be empty.");
         if (!Regex.IsMatch(slug, "^[a-z0-9]+(-[a-z0-9]+)*$"))
-            throw new DomainException("Brand Slug must be lowercase letters, digits and dashes.");
+            throw new DomainException("Brand slug must be lowercase letters, digits and dashes.");
 
         Id = id;
         Name = name.Trim();

@@ -3,7 +3,6 @@ using MiniMarket.Catalog.Domain;
 
 namespace MiniMarket.Catalog.Infrastructure;
 
-
 internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
 {
     public const string Schema = "catalog";

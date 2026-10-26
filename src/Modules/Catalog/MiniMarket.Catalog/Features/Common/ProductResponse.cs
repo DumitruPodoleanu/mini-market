@@ -10,8 +10,7 @@ internal sealed record ProductResponse(
     bool Published,
     int StockQuantity,
     BrandResponse Brand,
-    IReadOnlyList<CategoryResponse> Categories
-)
+    IReadOnlyList<CategoryResponse> Categories)
 {
     public static ProductResponse FromDomain(Product product) =>
         new(
@@ -22,6 +21,5 @@ internal sealed record ProductResponse(
             product.Published,
             product.StockQuantity,
             BrandResponse.FromDomain(product.Brand!),
-            product.Categories.Select(CategoryResponse.FromDomain).ToList()
-            );
+            product.Categories.Select(CategoryResponse.FromDomain).ToList());
 }

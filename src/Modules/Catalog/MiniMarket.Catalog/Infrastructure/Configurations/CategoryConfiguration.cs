@@ -9,10 +9,10 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.HasKey(b => b.Id);
-        builder.Property(b => b.Name).HasMaxLength(100).IsRequired();
-        builder.Property(b => b.Slug).HasMaxLength(100).IsRequired();
-        builder.HasIndex(b => b.Slug).IsUnique();
+        builder.HasKey(c => c.Id);
+        builder.Property(c => c.Name).HasMaxLength(100).IsRequired();
+        builder.Property(c => c.Slug).HasMaxLength(100).IsRequired();
+        builder.HasIndex(c => c.Slug).IsUnique();
 
         builder.HasData(CatalogSeed.Categories);
     }
