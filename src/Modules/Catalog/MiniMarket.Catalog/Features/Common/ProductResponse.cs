@@ -1,6 +1,6 @@
 using MiniMarket.Catalog.Domain;
 
-namespace MiniMarket.Catalog.Features.GetProduct;
+namespace MiniMarket.Catalog.Features.Common;
 
 internal sealed record ProductResponse(
     Guid Id,
@@ -9,7 +9,9 @@ internal sealed record ProductResponse(
     decimal Price,
     bool Published,
     int StockQuantity,
-    Guid BrandId)
+    BrandResponse Brand,
+    IReadOnlyList<CategoryResponse> Categories
+)
 {
     public static ProductResponse FromDomain(Product product) =>
         new(
@@ -19,5 +21,7 @@ internal sealed record ProductResponse(
             product.Price,
             product.Published,
             product.StockQuantity,
-            product.BrandId);
+            BrandResponse.FromDomain(product.Brand!),
+            product.Categories.Select(CategoryResponse.FromDomain).ToList()
+            );
 }

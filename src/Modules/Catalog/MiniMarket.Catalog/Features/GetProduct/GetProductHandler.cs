@@ -1,5 +1,6 @@
 using MiniMarket.Catalog.Domain;
 using MiniMarket.Shared;
+using MiniMarket.Catalog.Features.Common;
 
 namespace MiniMarket.Catalog.Features.GetProduct;
 
