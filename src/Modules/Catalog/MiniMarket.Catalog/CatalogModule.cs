@@ -20,7 +20,7 @@ public static class CatalogModule
             options.UseNpgsql(connectionString, npgsql =>
                 npgsql.MigrationsHistoryTable("__EFMigrationsHistory", CatalogDbContext.Schema)));
 
-        services.AddSingleton<IProductRepository, InMemoryProductRepository>();
+        services.AddScoped<IProductRepository, EfMemoryProductRepository>();
         services.AddScoped<GetProductHandler>();
         return services;
     }
