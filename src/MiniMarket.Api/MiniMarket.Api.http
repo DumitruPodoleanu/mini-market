@@ -1,0 +1,60 @@
+@baseUrl = http://localhost:5074
+
+GET {{baseUrl}}/api/products
+
+###
+
+GET {{baseUrl}}/api/products?categorySlug=plante-adaptogene
+
+###
+
+GET {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000001
+
+###
+
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "HERB-003",
+  "name": "Ginseng 60 caps",
+  "price": 159.90,
+  "published": true,
+  "stockQuantity": 30,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001", "c0000000-0000-0000-0000-000000000002"]
+}
+
+###
+
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "HERB-001",
+  "name": "Duplicate SKU",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+###
+
+PUT {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000004
+Content-Type: application/json
+
+{
+  "sku": "HERB-002",
+  "name": "Rhodiola 60 caps",
+  "price": 239.00,
+  "published": true,
+  "stockQuantity": 15,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000002"]
+}
+
+###
+
+DELETE {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000003
