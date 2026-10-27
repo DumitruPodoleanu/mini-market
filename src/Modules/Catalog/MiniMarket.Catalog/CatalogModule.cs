@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MiniMarket.Catalog.Domain;
 using MiniMarket.Catalog.Features.Common;
 using MiniMarket.Catalog.Features.CreateProduct;
@@ -18,12 +19,21 @@ public static class CatalogModule
 {
     public static IServiceCollection AddCatalogModule(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("Catalog")
-            ?? throw new InvalidOperationException("Connection string 'Catalog' is missing.");
+        services.AddOptions<CatalogDatabaseOptions>()
+            .Bind(configuration.GetSection(CatalogDatabaseOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        services.AddDbContext<CatalogDbContext>(options =>
-            options.UseNpgsql(connectionString, npgsql =>
-                npgsql.MigrationsHistoryTable("__EFMigrationsHistory", CatalogDbContext.Schema)));
+        services.AddDbContext<CatalogDbContext>((serviceProvider, options) =>
+        {
+            var databaseOptions = serviceProvider.GetRequiredService<IOptions<CatalogDatabaseOptions>>().Value;
+            options.UseNpgsql(databaseOptions.ConnectionString, npgsql =>
+            {
+                npgsql.MigrationsHistoryTable("__EFMigrationsHistory", CatalogDbContext.Schema);
+                npgsql.CommandTimeout(databaseOptions.CommandTimeoutSeconds);
+                npgsql.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
+            });
+        });
 
         services.AddScoped<IProductRepository, EfProductRepository>();
         services.AddScoped<IBrandRepository, EfBrandRepository>();
