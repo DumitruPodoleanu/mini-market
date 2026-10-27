@@ -1,3 +1,5 @@
+using MiniMarket.Catalog.Features.Common;
+
 namespace MiniMarket.Catalog.Features.CreateProduct;
 
 internal sealed record CreateProductRequest(
@@ -7,4 +9,4 @@ internal sealed record CreateProductRequest(
     bool Published,
     int StockQuantity,
     Guid BrandId,
-    IReadOnlyList<Guid>? CategoryIds);
+    IReadOnlyList<Guid>? CategoryIds) : IProductRequest;
