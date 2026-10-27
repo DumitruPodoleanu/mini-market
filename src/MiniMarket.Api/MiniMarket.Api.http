@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:5074
+@baseUrl = http://localhost:8080
 
 GET {{baseUrl}}/api/products
 
