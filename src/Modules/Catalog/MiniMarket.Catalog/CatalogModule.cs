@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,8 @@ public static class CatalogModule
                 npgsql.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
             });
         });
+
+        services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly, includeInternalTypes: true);
 
         services.AddScoped<IProductRepository, EfProductRepository>();
         services.AddScoped<IBrandRepository, EfBrandRepository>();
