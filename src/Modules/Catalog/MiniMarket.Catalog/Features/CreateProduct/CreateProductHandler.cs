@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MiniMarket.Catalog.Domain;
 using MiniMarket.Catalog.Features.Common;
+using MiniMarket.Catalog.Features.Common.Mappings;
 using MiniMarket.Shared;
 
 namespace MiniMarket.Catalog.Features.CreateProduct;
@@ -15,15 +16,7 @@ internal sealed class CreateProductHandler(
         await productReferences.EnsureBrandExistsAsync(request.BrandId);
         var categories = await productReferences.GetCategoriesAsync(request.CategoryIds ?? []);
 
-        var product = Product.Create(
-            Guid.NewGuid(),
-            request.Sku,
-            request.Name,
-            request.Price,
-            request.Published,
-            request.StockQuantity,
-            request.BrandId,
-            categories);
+        var product = request.ToEntity(categories);
 
         if (await productRepository.SkuExistsAsync(product.Sku))
             throw new DomainException($"A product with SKU {product.Sku} already exists.");
