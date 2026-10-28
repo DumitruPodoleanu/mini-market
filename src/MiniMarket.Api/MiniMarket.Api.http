@@ -8,7 +8,7 @@ GET {{baseUrl}}/api/products?categorySlug=plante-adaptogene
 
 ###
 
-GET {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000001
+GET {{baseUrl}}/api/products/01a182a0-ae1f-7e41-8da1-3421e3b2c19d
 
 ###
 
@@ -16,11 +16,11 @@ POST {{baseUrl}}/api/products
 Content-Type: application/json
 
 {
-  "sku": "HERB-003",
+  "sku": "HERB-004",
   "name": "Ginseng 60 caps",
-  "price": 159.90,
+  "price": -5,
   "published": true,
-  "stockQuantity": 30,
+  "stockQuantity": -2,
   "brandId": "b0000000-0000-0000-0000-000000000001",
   "categoryIds": ["c0000000-0000-0000-0000-000000000001", "c0000000-0000-0000-0000-000000000002"]
 }
@@ -31,7 +31,7 @@ POST {{baseUrl}}/api/products
 Content-Type: application/json
 
 {
-  "sku": "HERB-001",
+  "sku": "  herb-012  ",
   "name": "Duplicate SKU",
   "price": 10,
   "published": true,
@@ -42,15 +42,15 @@ Content-Type: application/json
 
 ###
 
-PUT {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000004
+PUT {{baseUrl}}/api/products/01a182a0-ae1f-7e41-8da1-3421e3b2c19d
 Content-Type: application/json
 
 {
-  "sku": "HERB-002",
-  "name": "Rhodiola 60 caps",
-  "price": 239.00,
-  "published": true,
-  "stockQuantity": 15,
+  "sku": "  herb-012  ",
+  "name": "DuplicateSKUsheesh",
+  "price": 11,
+  "published": false,
+  "stockQuantity": 1,
   "brandId": "b0000000-0000-0000-0000-000000000001",
   "categoryIds": ["c0000000-0000-0000-0000-000000000002"]
 }

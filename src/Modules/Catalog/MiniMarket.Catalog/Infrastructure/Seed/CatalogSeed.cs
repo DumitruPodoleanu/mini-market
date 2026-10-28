@@ -20,17 +20,17 @@ internal static class CatalogSeed
 
     public static readonly Brand[] Brands =
     [
-        new(NowFoods, "Now Foods", "now-foods"),
-        new(Solgar, "Solgar", "solgar"),
-        new(NaturesWay, "Nature's Way", "natures-way"),
+        new() { Id = NowFoods, Name = "Now Foods", Slug = "now-foods" },
+        new() { Id = Solgar, Name = "Solgar", Slug = "solgar" },
+        new() { Id = NaturesWay, Name = "Nature's Way", Slug = "natures-way" },
     ];
 
     public static readonly Category[] Categories =
     [
-        new(Supplements, "Suplimente", "suplimente"),
-        new(Adaptogens, "Plante adaptogene", "plante-adaptogene"),
-        new(Vitamins, "Vitamine", "vitamine"),
-        new(Minerals, "Minerale", "minerale"),
+        new() { Id = Supplements, Name = "Suplimente", Slug = "suplimente" },
+        new() { Id = Adaptogens, Name = "Plante adaptogene", Slug = "plante-adaptogene" },
+        new() { Id = Vitamins, Name = "Vitamine", Slug = "vitamine" },
+        new() { Id = Minerals, Name = "Minerale", Slug = "minerale" },
     ];
 
     public static readonly object[] Products =
