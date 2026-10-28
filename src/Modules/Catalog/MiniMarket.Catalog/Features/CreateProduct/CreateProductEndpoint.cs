@@ -9,9 +9,6 @@ internal static class CreateProductEndpoint
 {
     public static void Map(IEndpointRouteBuilder group) =>
         group.MapPost("/", async (CreateProductRequest request, CreateProductHandler handler) =>
-        {
-            var id = await handler.HandleAsync(request);
-            return Results.Created($"/api/products/{id}", new { id });
-        })
+            (await handler.HandleAsync(request)).ToCreatedHttpResult("/api/products"))
         .AddEndpointFilter<ValidationFilter<CreateProductRequest>>();
 }
