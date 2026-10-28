@@ -1,60 +1,56 @@
 @baseUrl = http://localhost:8080
 
+### List all products
+# 200: data = the 4 seed products, ordered by name
 GET {{baseUrl}}/api/products
 
-###
-
+### List products in one category
+# 200: data = Ashwagandha and Rhodiola
 GET {{baseUrl}}/api/products?categorySlug=plante-adaptogene
 
-###
+### Get one product
+# 200: data = Ashwagandha 60 caps, brand Now Foods, 2 categories
+GET {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000001
 
-GET {{baseUrl}}/api/products/01a182a0-ae1f-7e41-8da1-3421e3b2c19d
-
-###
-
+### Create a product
+# 201: data = the new product id, Location header = /api/products/<id>
+# The SKU is random so this can be sent again without a 409.
+# Send this first: the update and delete below use its id.
+# @name createProduct
 POST {{baseUrl}}/api/products
 Content-Type: application/json
 
 {
-  "sku": "HERB-004",
-  "name": "Ginseng 60 caps",
-  "price": -5,
+  "sku": "  demo-{{$randomInt 1000 9999}}  ",
+  "name": "  Ginseng 60 caps  ",
+  "price": 159.90,
   "published": true,
-  "stockQuantity": -2,
+  "stockQuantity": 30,
   "brandId": "b0000000-0000-0000-0000-000000000001",
   "categoryIds": ["c0000000-0000-0000-0000-000000000001", "c0000000-0000-0000-0000-000000000002"]
 }
 
-###
+### Get the created product
+# 200: SKU stored trimmed and uppercased (DEMO-1234), name trimmed
+GET {{baseUrl}}/api/products/{{createProduct.response.body.$.data}}
 
-POST {{baseUrl}}/api/products
+### Update the created product
+# 200: { success: true, data: null, errors: [] }
+# Changes the name, price and stock, and keeps one category instead of two
+PUT {{baseUrl}}/api/products/{{createProduct.response.body.$.data}}
 Content-Type: application/json
 
 {
-  "sku": "  herb-012  ",
-  "name": "Duplicate SKU",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "sku": "demo-{{$randomInt 1000 9999}}",
+  "name": "Ginseng 120 caps",
+  "price": 279.00,
+  "published": false,
+  "stockQuantity": 12,
+  "brandId": "b0000000-0000-0000-0000-000000000002",
   "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
 }
 
-###
-
-PUT {{baseUrl}}/api/products/01a182a0-ae1f-7e41-8da1-3421e3b2c19d
-Content-Type: application/json
-
-{
-  "sku": "  herb-012  ",
-  "name": "DuplicateSKUsheesh",
-  "price": 11,
-  "published": false,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000002"]
-}
-
-###
-
-DELETE {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000003
+### Delete the created product
+# 200: { success: true, data: null, errors: [] }
+# Sending it a second time gives 404, because the product is gone
+DELETE {{baseUrl}}/api/products/{{createProduct.response.body.$.data}}

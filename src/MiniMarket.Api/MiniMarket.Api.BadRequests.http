@@ -1,0 +1,226 @@
+@baseUrl = http://localhost:8080
+@missingId = 11111111-1111-1111-1111-111111111111
+
+### Get a product that does not exist
+# 404: errors = ["Product 11111111-1111-1111-1111-111111111111 was not found."]
+GET {{baseUrl}}/api/products/{{missingId}}
+
+### Get with an id that is not a valid guid
+# 404 with an EMPTY body: the {id:guid} route constraint fails, so no endpoint runs
+GET {{baseUrl}}/api/products/not-a-guid
+
+### Create with several invalid fields at once
+# 400: errors = ["SKU is required.", "Price must be greater than zero.", "Stock quantity cannot be negative."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "",
+  "name": "Ginseng 60 caps",
+  "price": -5,
+  "published": true,
+  "stockQuantity": -2,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create without a name
+# 400: errors = ["Name is required."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "NONAME-1",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create with a SKU in the wrong format
+# 400: errors = ["SKU can only contain letters, digits and dashes."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "HERB 001!",
+  "name": "Bad SKU",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create with a SKU longer than 50 characters (51 here)
+# 400: errors = ["SKU cannot exceed 50 characters."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "name": "Long SKU",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create with a name longer than 100 characters (101 here)
+# 400: errors = ["Name cannot exceed 100 characters."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "LONGNAME-1",
+  "name": "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create without a brand
+# 400: errors = ["Brand ID is required."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "NOBRAND-1",
+  "name": "No brand",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "00000000-0000-0000-0000-000000000000",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create without categories
+# 400: errors = ["At least one category ID is required."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "NOCAT-1",
+  "name": "No categories",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": []
+}
+
+### Create with an empty category id
+# 400: errors = ["Category IDs cannot be empty."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "EMPTYCAT-1",
+  "name": "Empty category id",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["00000000-0000-0000-0000-000000000000"]
+}
+
+### Create with a brand that does not exist
+# 400: errors = ["Brand 11111111-1111-1111-1111-111111111111 does not exist."]
+# Passes validation; the handler finds the brand missing in the database
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "GHOSTBRAND-1",
+  "name": "Unknown brand",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "{{missingId}}",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create with a category that does not exist
+# 400: errors = ["Categories do not exist: 11111111-1111-1111-1111-111111111111."]
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "GHOSTCAT-1",
+  "name": "Unknown category",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001", "{{missingId}}"]
+}
+
+### Create with a SKU that already exists
+# 409: errors = ["A product with SKU HERB-001 already exists."]
+# Lowercase with spaces on purpose: it is normalized to HERB-001 before the check
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "  herb-001  ",
+  "name": "Duplicate SKU",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Create with JSON that cannot be read (a blank string where a guid is expected)
+# 400, not an envelope: the JSON fails to convert before validation runs
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "sku": "BADJSON-1",
+  "name": "Bad JSON",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": [" "]
+}
+
+### Update a product that does not exist
+# 404: errors = ["Product 11111111-1111-1111-1111-111111111111 was not found."]
+PUT {{baseUrl}}/api/products/{{missingId}}
+Content-Type: application/json
+
+{
+  "sku": "HERB-999",
+  "name": "Missing product",
+  "price": 10,
+  "published": true,
+  "stockQuantity": 1,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+}
+
+### Update a product with another product's SKU
+# 409: errors = ["A product with SKU VIT-001 already exists."]
+# Nothing is saved: Ashwagandha keeps HERB-001
+PUT {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000001
+Content-Type: application/json
+
+{
+  "sku": "VIT-001",
+  "name": "Ashwagandha 60 caps",
+  "price": 189.90,
+  "published": true,
+  "stockQuantity": 25,
+  "brandId": "b0000000-0000-0000-0000-000000000001",
+  "categoryIds": ["c0000000-0000-0000-0000-000000000001", "c0000000-0000-0000-0000-000000000002"]
+}
+
+### Delete a product that does not exist
+# 404: errors = ["Product 11111111-1111-1111-1111-111111111111 was not found."]
+DELETE {{baseUrl}}/api/products/{{missingId}}
