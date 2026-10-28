@@ -1,21 +1,17 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using MiniMarket.Catalog.Features.Common;
 
 namespace MiniMarket.Catalog.Features.UpdateProduct;
 
 internal static class UpdateProductEndpoint
 {
     public static void Map(IEndpointRouteBuilder group) =>
-        group.MapPut("/{id:guid}", async (Guid id, UpdateProductRequest request, UpdateProductHandler handler, IValidator<UpdateProductRequest> validator) =>
+        group.MapPut("/{id:guid}", async (Guid id, UpdateProductRequest request, UpdateProductHandler handler) =>
         {
-            var validation = await validator.ValidateAsync(request);
-            if (!validation.IsValid)
-            {
-                return Results.ValidationProblem(validation.ToDictionary());
-            }
             await handler.HandleAsync(id, request);
             return Results.NoContent();
-        });
+        })
+        .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>();
 }
