@@ -11,10 +11,10 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.Sku).HasMaxLength(50).IsRequired();
+        builder.Property(p => p.Sku).HasMaxLength(ProductConstraints.SkuMaxLength).IsRequired();
         builder.HasIndex(p => p.Sku).IsUnique();
 
-        builder.Property(p => p.Name).HasMaxLength(100).IsRequired();
+        builder.Property(p => p.Name).HasMaxLength(ProductConstraints.NameMaxLength).IsRequired();
         builder.Property(p => p.Price).HasPrecision(18, 2);
 
         builder.HasOne(p => p.Brand)
