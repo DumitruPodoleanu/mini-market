@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
+using MiniMarket.Shared.Results;
 
 namespace MiniMarket.Catalog.Features.Common;
 
@@ -12,7 +13,8 @@ internal sealed class ValidationFilter<T>(IValidator<T> validator) : IEndpointFi
 
         if (!validation.IsValid)
         {
-            return Results.ValidationProblem(validation.ToDictionary());
+            var errors = validation.Errors.Select(e => e.ErrorMessage).ToList();
+            return Results.BadRequest(new ApiResponse<object>(false, null, errors));
         }
         return await next(context);
     }
