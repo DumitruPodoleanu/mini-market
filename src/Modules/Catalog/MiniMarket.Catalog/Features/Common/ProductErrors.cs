@@ -1,5 +1,7 @@
 using MiniMarket.Shared.Results;
 
+namespace MiniMarket.Catalog.Features.Common;
+
 internal static class ProductErrors
 {
     public static Error NotFound(Guid id) =>
