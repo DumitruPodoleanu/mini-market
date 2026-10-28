@@ -1,6 +1,7 @@
 using MiniMarket.Catalog.Domain;
 using MiniMarket.Shared;
 using MiniMarket.Catalog.Features.Common;
+using MiniMarket.Catalog.Features.Common.Mappings;
 
 namespace MiniMarket.Catalog.Features.GetProduct;
 
@@ -11,6 +12,6 @@ internal sealed class GetProductHandler(IProductRepository productRepository)
         var product = await productRepository.GetByIdAsync(id)
             ?? throw new NotFoundException($"Product {id} was not found.");
 
-        return ProductResponse.FromDomain(product);
+        return product.ToResponse();
     }
 }

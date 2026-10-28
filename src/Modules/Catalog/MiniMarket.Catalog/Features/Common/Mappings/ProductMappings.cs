@@ -26,4 +26,15 @@ internal static class ProductMappings
         request.MapTo(product, categories);
         return product;
     }
+
+    public static ProductResponse ToResponse(this Product product) => new(
+        product.Id,
+        product.Sku,
+        product.Name,
+        product.Price,
+        product.Published,
+        product.StockQuantity,
+        product.Brand!.ToResponse(),
+        product.Categories.Select(c => c.ToResponse()).ToList()
+    );
 }

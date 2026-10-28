@@ -1,5 +1,6 @@
 using MiniMarket.Catalog.Domain;
 using MiniMarket.Catalog.Features.Common;
+using MiniMarket.Catalog.Features.Common.Mappings;
 
 namespace MiniMarket.Catalog.Features.ListProducts;
 
@@ -9,6 +10,6 @@ internal sealed class ListProductsHandler(IProductRepository productRepository)
     {
         var products = await productRepository.GetAllAsync(categorySlug);
 
-        return products.Select(ProductResponse.FromDomain).ToList();
+        return products.Select(p => p.ToResponse()).ToList();
     }
 }
