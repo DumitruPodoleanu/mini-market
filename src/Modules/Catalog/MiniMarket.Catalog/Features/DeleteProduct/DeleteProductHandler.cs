@@ -11,7 +11,7 @@ internal sealed class DeleteProductHandler(
 {
     public async Task<Result> HandleAsync(Guid id)
     {
-        var product = await productRepository.GetByIdAsync(id);
+        var product = await productRepository.GetByIdForUpdateAsync(id);
 
         if (product is null)
             return ProductErrors.NotFound(id);

@@ -13,7 +13,7 @@ internal sealed class UpdateProductHandler(
 {
     public async Task<Result> HandleAsync(Guid id, UpdateProductRequest request)
     {
-        var product = await productRepository.GetByIdAsync(id);
+        var product = await productRepository.GetByIdForUpdateAsync(id);
         if (product is null)
             return ProductErrors.NotFound(id);
 
