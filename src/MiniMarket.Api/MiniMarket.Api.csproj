@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules\Catalog\MiniMarket.Catalog\MiniMarket.Catalog.csproj" />
-    <ProjectReference Include="..\Shared\MiniMarket.Shared\MiniMarket.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
