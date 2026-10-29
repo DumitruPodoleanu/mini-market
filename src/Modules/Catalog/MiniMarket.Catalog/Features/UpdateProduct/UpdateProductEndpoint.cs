@@ -11,5 +11,7 @@ internal sealed class UpdateProductEndpoint : IEndpoint
         app.MapPut("/api/products/{id:guid}", async (Guid id, UpdateProductRequest request, UpdateProductHandler handler) =>
             (await handler.HandleAsync(id, request)).ToHttpResult())
         .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>()
-        .WithTags("Products");
+        .WithTags("Products")
+        .ProducesApiResponse<object>()
+        .ProducesApiErrors(StatusCodes.Status400BadRequest, StatusCodes.Status404NotFound, StatusCodes.Status409Conflict);
 }

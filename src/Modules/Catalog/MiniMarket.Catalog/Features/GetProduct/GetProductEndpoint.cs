@@ -10,5 +10,7 @@ internal sealed class GetProductEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app) =>
         app.MapGet("/api/products/{id:guid}", async (Guid id, GetProductHandler handler) =>
             (await handler.HandleAsync(id)).ToHttpResult())
-        .WithTags("Products");
+        .WithTags("Products")
+        .ProducesApiResponse<ProductResponse>()
+        .ProducesApiErrors(StatusCodes.Status404NotFound);
 }

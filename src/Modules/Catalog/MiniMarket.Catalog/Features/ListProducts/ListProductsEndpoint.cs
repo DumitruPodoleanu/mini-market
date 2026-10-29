@@ -10,5 +10,6 @@ internal sealed class ListProductsEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app) =>
         app.MapGet("/api/products", async (string? categorySlug, ListProductsHandler handler) =>
             (await handler.HandleAsync(categorySlug)).ToHttpResult())
-        .WithTags("Products");
+        .WithTags("Products")
+        .ProducesApiResponse<IReadOnlyList<ProductResponse>>();
 }

@@ -10,5 +10,7 @@ internal sealed class DeleteProductEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app) =>
         app.MapDelete("/api/products/{id:guid}", async (Guid id, DeleteProductHandler handler) =>
             (await handler.HandleAsync(id)).ToHttpResult())
-        .WithTags("Products");
+        .WithTags("Products")
+        .ProducesApiResponse<object>()
+        .ProducesApiErrors(StatusCodes.Status404NotFound);
 }

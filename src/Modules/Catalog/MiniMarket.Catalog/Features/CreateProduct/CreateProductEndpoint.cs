@@ -11,5 +11,7 @@ internal sealed class CreateProductEndpoint : IEndpoint
         app.MapPost("/api/products", async (CreateProductRequest request, CreateProductHandler handler) =>
             (await handler.HandleAsync(request)).ToCreatedHttpResult("/api/products"))
         .AddEndpointFilter<ValidationFilter<CreateProductRequest>>()
-        .WithTags("Products");
+        .WithTags("Products")
+        .ProducesApiResponse<Guid>(StatusCodes.Status201Created)
+        .ProducesApiErrors(StatusCodes.Status400BadRequest, StatusCodes.Status409Conflict);
 }
