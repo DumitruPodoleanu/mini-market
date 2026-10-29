@@ -3,7 +3,7 @@ using MiniMarket.Catalog.Domain;
 
 namespace MiniMarket.Catalog.Infrastructure;
 
-internal sealed class EfProductRepository(CatalogDbContext dbContext) : IProductRepository
+internal sealed class EfProductRepository(ICatalogDbContext dbContext) : IProductRepository
 {
     public Task<Product?> GetByIdAsync(Guid id) =>
          dbContext.Products

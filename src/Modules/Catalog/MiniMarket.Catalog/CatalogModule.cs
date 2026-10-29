@@ -36,6 +36,8 @@ public static class CatalogModule
             });
         });
 
+        services.AddScoped<ICatalogDbContext>(serviceProvider => serviceProvider.GetRequiredService<CatalogDbContext>());
+
         services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly, includeInternalTypes: true);
         services.AddEndpoints(typeof(CatalogModule).Assembly);
 
