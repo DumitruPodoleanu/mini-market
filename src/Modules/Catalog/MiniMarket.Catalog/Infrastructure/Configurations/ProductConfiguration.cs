@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MiniMarket.Catalog.Domain;
-using MiniMarket.Catalog.Infrastructure.Seed;
 
 namespace MiniMarket.Catalog.Infrastructure.Configurations;
 
@@ -31,9 +30,6 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
                 join =>
                 {
                     join.HasKey("ProductId", "CategoryId");
-                    join.HasData(CatalogSeed.ProductCategories);
                 });
-
-        builder.HasData(CatalogSeed.Products);
     }
 }

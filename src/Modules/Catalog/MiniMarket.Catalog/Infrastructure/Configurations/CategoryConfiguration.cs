@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MiniMarket.Catalog.Domain;
-using MiniMarket.Catalog.Infrastructure.Seed;
 
 namespace MiniMarket.Catalog.Infrastructure.Configurations;
 
@@ -13,7 +12,5 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Name).HasMaxLength(CategoryConstraints.NameMaxLength).IsRequired();
         builder.Property(c => c.Slug).HasMaxLength(CategoryConstraints.SlugMaxLength).IsRequired();
         builder.HasIndex(c => c.Slug).IsUnique();
-
-        builder.HasData(CatalogSeed.Categories);
     }
 }

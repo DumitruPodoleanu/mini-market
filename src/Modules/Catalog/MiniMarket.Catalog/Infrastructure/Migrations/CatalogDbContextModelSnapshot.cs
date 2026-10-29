@@ -45,26 +45,6 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Brands", "catalog");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("b0000000-0000-0000-0000-000000000001"),
-                            Name = "Now Foods",
-                            Slug = "now-foods"
-                        },
-                        new
-                        {
-                            Id = new Guid("b0000000-0000-0000-0000-000000000002"),
-                            Name = "Solgar",
-                            Slug = "solgar"
-                        },
-                        new
-                        {
-                            Id = new Guid("b0000000-0000-0000-0000-000000000003"),
-                            Name = "Nature's Way",
-                            Slug = "natures-way"
-                        });
                 });
 
             modelBuilder.Entity("MiniMarket.Catalog.Domain.Category", b =>
@@ -89,32 +69,6 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories", "catalog");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c0000000-0000-0000-0000-000000000001"),
-                            Name = "Suplimente",
-                            Slug = "suplimente"
-                        },
-                        new
-                        {
-                            Id = new Guid("c0000000-0000-0000-0000-000000000002"),
-                            Name = "Plante adaptogene",
-                            Slug = "plante-adaptogene"
-                        },
-                        new
-                        {
-                            Id = new Guid("c0000000-0000-0000-0000-000000000003"),
-                            Name = "Vitamine",
-                            Slug = "vitamine"
-                        },
-                        new
-                        {
-                            Id = new Guid("c0000000-0000-0000-0000-000000000004"),
-                            Name = "Minerale",
-                            Slug = "minerale"
-                        });
                 });
 
             modelBuilder.Entity("MiniMarket.Catalog.Domain.Product", b =>
@@ -154,48 +108,6 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Products", "catalog");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a0000000-0000-0000-0000-000000000001"),
-                            BrandId = new Guid("b0000000-0000-0000-0000-000000000001"),
-                            Name = "Ashwagandha 60 caps",
-                            Price = 189.90m,
-                            Published = true,
-                            Sku = "HERB-001",
-                            StockQuantity = 25
-                        },
-                        new
-                        {
-                            Id = new Guid("a0000000-0000-0000-0000-000000000002"),
-                            BrandId = new Guid("b0000000-0000-0000-0000-000000000002"),
-                            Name = "Vitamina D3 2000 UI 120 caps",
-                            Price = 149.50m,
-                            Published = true,
-                            Sku = "VIT-001",
-                            StockQuantity = 40
-                        },
-                        new
-                        {
-                            Id = new Guid("a0000000-0000-0000-0000-000000000003"),
-                            BrandId = new Guid("b0000000-0000-0000-0000-000000000003"),
-                            Name = "Magneziu bisglicinat 90 tab",
-                            Price = 219.00m,
-                            Published = true,
-                            Sku = "MIN-001",
-                            StockQuantity = 12
-                        },
-                        new
-                        {
-                            Id = new Guid("a0000000-0000-0000-0000-000000000004"),
-                            BrandId = new Guid("b0000000-0000-0000-0000-000000000001"),
-                            Name = "Rhodiola 60 caps",
-                            Price = 249.00m,
-                            Published = false,
-                            Sku = "HERB-002",
-                            StockQuantity = 0
-                        });
                 });
 
             modelBuilder.Entity("ProductCategories", b =>
@@ -211,43 +123,6 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("ProductCategories", "catalog");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = new Guid("a0000000-0000-0000-0000-000000000001"),
-                            CategoryId = new Guid("c0000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("a0000000-0000-0000-0000-000000000001"),
-                            CategoryId = new Guid("c0000000-0000-0000-0000-000000000002")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("a0000000-0000-0000-0000-000000000002"),
-                            CategoryId = new Guid("c0000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("a0000000-0000-0000-0000-000000000002"),
-                            CategoryId = new Guid("c0000000-0000-0000-0000-000000000003")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("a0000000-0000-0000-0000-000000000003"),
-                            CategoryId = new Guid("c0000000-0000-0000-0000-000000000001")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("a0000000-0000-0000-0000-000000000003"),
-                            CategoryId = new Guid("c0000000-0000-0000-0000-000000000004")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("a0000000-0000-0000-0000-000000000004"),
-                            CategoryId = new Guid("c0000000-0000-0000-0000-000000000002")
-                        });
                 });
 
             modelBuilder.Entity("MiniMarket.Catalog.Domain.Product", b =>

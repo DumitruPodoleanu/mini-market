@@ -13,6 +13,7 @@ using MiniMarket.Catalog.Features.GetProduct;
 using MiniMarket.Catalog.Features.ListProducts;
 using MiniMarket.Catalog.Features.UpdateProduct;
 using MiniMarket.Catalog.Infrastructure;
+using MiniMarket.Catalog.Infrastructure.Seed;
 
 namespace MiniMarket.Catalog;
 
@@ -34,6 +35,8 @@ public static class CatalogModule
                 npgsql.CommandTimeout(databaseOptions.CommandTimeoutSeconds);
                 npgsql.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
             });
+            options.UseSeeding((context, _) => CatalogSeed.Seed(context));
+            options.UseAsyncSeeding((context, _, cancellationToken) => CatalogSeed.SeedAsync(context, cancellationToken));
         });
 
         services.AddScoped<ICatalogDbContext>(serviceProvider => serviceProvider.GetRequiredService<CatalogDbContext>());
