@@ -37,6 +37,7 @@ public static class CatalogModule
         });
 
         services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly, includeInternalTypes: true);
+        services.AddEndpoints(typeof(CatalogModule).Assembly);
 
         services.AddScoped<IProductRepository, EfProductRepository>();
         services.AddScoped<IBrandRepository, EfBrandRepository>();
@@ -54,12 +55,7 @@ public static class CatalogModule
 
     public static IEndpointRouteBuilder MapCatalogEndpoints(this IEndpointRouteBuilder app)
     {
-        var products = app.MapGroup("/api/products");
-        GetProductEndpoint.Map(products);
-        ListProductsEndpoint.Map(products);
-        CreateProductEndpoint.Map(products);
-        UpdateProductEndpoint.Map(products);
-        DeleteProductEndpoint.Map(products);
+        app.MapEndpoints();
         return app;
     }
 

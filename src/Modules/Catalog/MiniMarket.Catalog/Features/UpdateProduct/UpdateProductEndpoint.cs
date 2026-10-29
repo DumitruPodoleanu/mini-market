@@ -5,10 +5,11 @@ using MiniMarket.Catalog.Features.Common;
 
 namespace MiniMarket.Catalog.Features.UpdateProduct;
 
-internal static class UpdateProductEndpoint
+internal sealed class UpdateProductEndpoint : IEndpoint
 {
-    public static void Map(IEndpointRouteBuilder group) =>
-        group.MapPut("/{id:guid}", async (Guid id, UpdateProductRequest request, UpdateProductHandler handler) =>
+    public void MapEndpoint(IEndpointRouteBuilder app) =>
+        app.MapPut("/api/products/{id:guid}", async (Guid id, UpdateProductRequest request, UpdateProductHandler handler) =>
             (await handler.HandleAsync(id, request)).ToHttpResult())
-        .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>();
+        .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>()
+        .WithTags("Products");
 }
