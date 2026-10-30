@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MiniMarket.Catalog.Domain;
+using MiniMarket.Catalog.Domain.Entities;
 
 namespace MiniMarket.Catalog.Infrastructure.Seed;
 
@@ -7,7 +7,7 @@ internal static class CatalogSeed
 {
     public static void Seed(DbContext context)
     {
-        if (context.Set<Brand>().Any())
+        if (context.Set<BrandEntity>().Any())
         {
             return;
         }
@@ -18,7 +18,7 @@ internal static class CatalogSeed
 
     public static async Task SeedAsync(DbContext context, CancellationToken cancellationToken)
     {
-        if (await context.Set<Brand>().AnyAsync(cancellationToken))
+        if (await context.Set<BrandEntity>().AnyAsync(cancellationToken))
         {
             return;
         }
@@ -27,16 +27,16 @@ internal static class CatalogSeed
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    private static Product[] CreateProducts()
+    private static ProductEntity[] CreateProducts()
     {
-        var nowFoods = new Brand { Id = Guid.CreateVersion7(), Name = "Now Foods", Slug = "now-foods" };
-        var solgar = new Brand { Id = Guid.CreateVersion7(), Name = "Solgar", Slug = "solgar" };
-        var naturesWay = new Brand { Id = Guid.CreateVersion7(), Name = "Nature's Way", Slug = "natures-way" };
+        var nowFoods = new BrandEntity { Id = Guid.CreateVersion7(), Name = "Now Foods", Slug = "now-foods" };
+        var solgar = new BrandEntity { Id = Guid.CreateVersion7(), Name = "Solgar", Slug = "solgar" };
+        var naturesWay = new BrandEntity { Id = Guid.CreateVersion7(), Name = "Nature's Way", Slug = "natures-way" };
 
-        var supplements = new Category { Id = Guid.CreateVersion7(), Name = "Suplimente", Slug = "suplimente" };
-        var adaptogens = new Category { Id = Guid.CreateVersion7(), Name = "Plante adaptogene", Slug = "plante-adaptogene" };
-        var vitamins = new Category { Id = Guid.CreateVersion7(), Name = "Vitamine", Slug = "vitamine" };
-        var minerals = new Category { Id = Guid.CreateVersion7(), Name = "Minerale", Slug = "minerale" };
+        var supplements = new CategoryEntity { Id = Guid.CreateVersion7(), Name = "Suplimente", Slug = "suplimente" };
+        var adaptogens = new CategoryEntity { Id = Guid.CreateVersion7(), Name = "Plante adaptogene", Slug = "plante-adaptogene" };
+        var vitamins = new CategoryEntity { Id = Guid.CreateVersion7(), Name = "Vitamine", Slug = "vitamine" };
+        var minerals = new CategoryEntity { Id = Guid.CreateVersion7(), Name = "Minerale", Slug = "minerale" };
 
         return
         [

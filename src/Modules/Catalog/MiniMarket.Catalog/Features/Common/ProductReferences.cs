@@ -1,4 +1,6 @@
-using MiniMarket.Catalog.Domain;
+using MiniMarket.Catalog.Domain.Entities;
+using MiniMarket.Catalog.Domain.Repositories;
+using MiniMarket.Catalog.Features.Common.Errors;
 using MiniMarket.Shared.Results;
 
 namespace MiniMarket.Catalog.Features.Common;
@@ -13,7 +15,7 @@ internal sealed class ProductReferences(IBrandRepository brandRepository, ICateg
         return Result.Success();
     }
 
-    public async Task<Result<IReadOnlyList<Category>>> GetCategoriesAsync(IReadOnlyCollection<Guid> categoryIds)
+    public async Task<Result<IReadOnlyList<CategoryEntity>>> GetCategoriesAsync(IReadOnlyCollection<Guid> categoryIds)
     {
         var distinctIds = categoryIds.Distinct().ToList();
         var categories = await categoryRepository.GetByIdsAsync(distinctIds);
@@ -22,6 +24,6 @@ internal sealed class ProductReferences(IBrandRepository brandRepository, ICateg
         if (missingIds.Count > 0)
             return ProductErrors.CategoriesNotFound(missingIds);
 
-        return Result<IReadOnlyList<Category>>.Success(categories);
+        return Result<IReadOnlyList<CategoryEntity>>.Success(categories);
     }
 }

@@ -1,13 +1,14 @@
-using MiniMarket.Catalog.Domain;
+using MiniMarket.Catalog.Domain.Entities;
+using MiniMarket.Catalog.Features.Common.Contracts;
 
 namespace MiniMarket.Catalog.Features.Common.Mappings;
 
 internal static class ProductMappings
 {
-    public static void MapTo(this IProductRequest request, Product product, IReadOnlyList<Category> categories)
+    public static void MapTo(this IProductRequest request, ProductEntity product, IReadOnlyList<CategoryEntity> categories)
     {
-        product.Sku = request.Sku.Trim().ToUpperInvariant();
-        product.Name = request.Name.Trim();
+        product.Sku = NormalizeSku(request.Sku);
+        product.Name = NormalizeName(request.Name);
         product.Price = request.Price;
         product.Published = request.Published;
         product.StockQuantity = request.StockQuantity;
@@ -20,14 +21,19 @@ internal static class ProductMappings
         }
     }
 
-    public static Product ToEntity(this IProductRequest request, IReadOnlyList<Category> categories)
+    public static ProductEntity ToEntity(this IProductRequest request, IReadOnlyList<CategoryEntity> categories) => new()
     {
-        var product = new Product { Id = Guid.CreateVersion7() };
-        request.MapTo(product, categories);
-        return product;
-    }
+        Id = Guid.CreateVersion7(),
+        Sku = NormalizeSku(request.Sku),
+        Name = NormalizeName(request.Name),
+        Price = request.Price,
+        Published = request.Published,
+        StockQuantity = request.StockQuantity,
+        BrandId = request.BrandId,
+        Categories = [.. categories]
+    };
 
-    public static ProductResponse ToResponse(this Product product) => new(
+    public static ProductResponse ToResponse(this ProductEntity product) => new(
         product.Id,
         product.Sku,
         product.Name,
@@ -37,4 +43,8 @@ internal static class ProductMappings
         product.Brand!.ToResponse(),
         product.Categories.Select(c => c.ToResponse()).ToList()
     );
+
+    private static string NormalizeSku(string sku) => sku.Trim().ToUpperInvariant();
+
+    private static string NormalizeName(string name) => name.Trim();
 }

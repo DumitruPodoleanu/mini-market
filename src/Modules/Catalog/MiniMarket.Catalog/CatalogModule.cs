@@ -5,14 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using MiniMarket.Catalog.Domain;
+using MiniMarket.Catalog.Domain.Repositories;
 using MiniMarket.Catalog.Features.Common;
-using MiniMarket.Catalog.Features.CreateProduct;
-using MiniMarket.Catalog.Features.DeleteProduct;
-using MiniMarket.Catalog.Features.GetProduct;
-using MiniMarket.Catalog.Features.ListProducts;
-using MiniMarket.Catalog.Features.UpdateProduct;
-using MiniMarket.Catalog.Infrastructure;
+using MiniMarket.Catalog.Features.Common.Endpoints;
+using MiniMarket.Catalog.Features.Products.CreateProduct;
+using MiniMarket.Catalog.Features.Products.DeleteProduct;
+using MiniMarket.Catalog.Features.Products.GetProduct;
+using MiniMarket.Catalog.Features.Products.ListProducts;
+using MiniMarket.Catalog.Features.Products.UpdateProduct;
+using MiniMarket.Catalog.Infrastructure.Persistence;
+using MiniMarket.Catalog.Infrastructure.Repositories;
 using MiniMarket.Catalog.Infrastructure.Seed;
 
 namespace MiniMarket.Catalog;
@@ -44,9 +46,9 @@ public static class CatalogModule
         services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly, includeInternalTypes: true);
         services.AddEndpoints(typeof(CatalogModule).Assembly);
 
-        services.AddScoped<IProductRepository, EfProductRepository>();
-        services.AddScoped<IBrandRepository, EfBrandRepository>();
-        services.AddScoped<ICategoryRepository, EfCategoryRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ProductReferences>();
 
         services.AddScoped<GetProductHandler>();

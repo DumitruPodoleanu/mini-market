@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MiniMarket.Catalog.Domain;
+using MiniMarket.Catalog.Domain.Constraints;
+using MiniMarket.Catalog.Domain.Entities;
 
 namespace MiniMarket.Catalog.Infrastructure.Configurations;
 
-internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
+internal sealed class ProductConfiguration : IEntityTypeConfiguration<ProductEntity>
 {
-    public void Configure(EntityTypeBuilder<Product> builder)
+    public void Configure(EntityTypeBuilder<ProductEntity> builder)
     {
         builder.HasKey(p => p.Id);
 
@@ -25,8 +26,8 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .WithMany()
             .UsingEntity(
                 "ProductCategories",
-                right => right.HasOne(typeof(Category)).WithMany().HasForeignKey("CategoryId"),
-                left => left.HasOne(typeof(Product)).WithMany().HasForeignKey("ProductId"),
+                right => right.HasOne(typeof(CategoryEntity)).WithMany().HasForeignKey("CategoryId"),
+                left => left.HasOne(typeof(ProductEntity)).WithMany().HasForeignKey("ProductId"),
                 join =>
                 {
                     join.HasKey("ProductId", "CategoryId");
