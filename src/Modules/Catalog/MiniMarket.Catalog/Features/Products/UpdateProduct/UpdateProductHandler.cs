@@ -12,26 +12,26 @@ internal sealed class UpdateProductHandler(
     ProductReferences productReferences,
     ILogger<UpdateProductHandler> logger)
 {
-    public async Task<Result> HandleAsync(Guid id, UpdateProductRequest request)
+    public async Task<Result> HandleAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdForUpdateAsync(id);
+        var product = await productRepository.GetByIdForUpdateAsync(id, cancellationToken);
         if (product is null)
             return ProductErrors.NotFound(id);
 
-        var brandResult = await productReferences.EnsureBrandExistsAsync(request.BrandId);
+        var brandResult = await productReferences.EnsureBrandExistsAsync(request.BrandId, cancellationToken);
         if (!brandResult.IsSuccess)
             return brandResult.Error!;
 
-        var categoriesResult = await productReferences.GetCategoriesAsync(request.CategoryIds ?? []);
+        var categoriesResult = await productReferences.GetCategoriesAsync(request.CategoryIds ?? [], cancellationToken);
         if (!categoriesResult.IsSuccess)
             return categoriesResult.Error!;
 
         request.MapTo(product, categoriesResult.Value!);
 
-        if (await productRepository.SkuExistsAsync(product.Sku, product.Id))
+        if (await productRepository.SkuExistsAsync(product.Sku, product.Id, cancellationToken))
             return ProductErrors.SkuAlreadyExists(product.Sku);
 
-        await productRepository.UpdateAsync(product);
+        await productRepository.UpdateAsync(product, cancellationToken);
 
         logger.LogInformation("Product {ProductId} updated", product.Id);
 

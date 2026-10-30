@@ -9,7 +9,7 @@ internal sealed class ValidationFilter<T>(IValidator<T> validator) : IEndpointFi
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         var request = context.Arguments.OfType<T>().First();
-        var validation = await validator.ValidateAsync(request);
+        var validation = await validator.ValidateAsync(request, context.HttpContext.RequestAborted);
 
         if (!validation.IsValid)
         {

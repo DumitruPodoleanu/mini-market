@@ -6,6 +6,6 @@ namespace MiniMarket.Catalog.Infrastructure.Repositories;
 
 internal sealed class BrandRepository(ICatalogDbContext dbContext) : IBrandRepository
 {
-    public Task<bool> ExistsAsync(Guid id) =>
-        dbContext.Brands.AnyAsync(b => b.Id == id);
+    public Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken) =>
+        dbContext.Brands.AnyAsync(b => b.Id == id, cancellationToken);
 }

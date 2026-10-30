@@ -10,8 +10,8 @@ namespace MiniMarket.Catalog.Features.Products.UpdateProduct;
 internal sealed class UpdateProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app) =>
-        app.MapPut("/api/products/{id:guid}", async (Guid id, UpdateProductRequest request, UpdateProductHandler handler) =>
-            (await handler.HandleAsync(id, request)).ToHttpResult())
+        app.MapPut("/api/products/{id:guid}", async (Guid id, UpdateProductRequest request, UpdateProductHandler handler, CancellationToken cancellationToken) =>
+            (await handler.HandleAsync(id, request, cancellationToken)).ToHttpResult())
         .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>()
         .WithTags("Products")
         .ProducesApiResponse<object>()

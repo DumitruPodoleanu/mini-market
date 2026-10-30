@@ -9,14 +9,14 @@ internal sealed class DeleteProductHandler(
     IProductRepository productRepository,
     ILogger<DeleteProductHandler> logger)
 {
-    public async Task<Result> HandleAsync(Guid id)
+    public async Task<Result> HandleAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdForUpdateAsync(id);
+        var product = await productRepository.GetByIdForUpdateAsync(id, cancellationToken);
 
         if (product is null)
             return ProductErrors.NotFound(id);
 
-        await productRepository.DeleteAsync(product);
+        await productRepository.DeleteAsync(product, cancellationToken);
 
         logger.LogInformation("Product {ProductId} deleted", product.Id);
 

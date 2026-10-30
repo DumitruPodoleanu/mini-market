@@ -4,11 +4,11 @@ namespace MiniMarket.Catalog.Domain.Repositories;
 
 internal interface IProductRepository
 {
-    Task<ProductEntity?> GetByIdAsync(Guid id);
-    Task<ProductEntity?> GetByIdForUpdateAsync(Guid id);
-    Task<IReadOnlyList<ProductEntity>> GetAllAsync(string? categorySlug);
-    Task<bool> SkuExistsAsync(string sku, Guid? excludedProductId = null);
-    Task AddAsync(ProductEntity product);
-    Task UpdateAsync(ProductEntity product);
-    Task DeleteAsync(ProductEntity product);
+    Task<ProductEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<ProductEntity?> GetByIdForUpdateAsync(Guid id, CancellationToken cancellationToken);
+    Task<IReadOnlyList<ProductEntity>> GetAllAsync(string? categorySlug, CancellationToken cancellationToken);
+    Task<bool> SkuExistsAsync(string sku, Guid? excludedProductId, CancellationToken cancellationToken);
+    Task AddAsync(ProductEntity product, CancellationToken cancellationToken);
+    Task UpdateAsync(ProductEntity product, CancellationToken cancellationToken);
+    Task DeleteAsync(ProductEntity product, CancellationToken cancellationToken);
 }

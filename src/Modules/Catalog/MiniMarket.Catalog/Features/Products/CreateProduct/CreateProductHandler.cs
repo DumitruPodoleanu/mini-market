@@ -12,22 +12,22 @@ internal sealed class CreateProductHandler(
     ProductReferences productReferences,
     ILogger<CreateProductHandler> logger)
 {
-    public async Task<Result<Guid>> HandleAsync(CreateProductRequest request)
+    public async Task<Result<Guid>> HandleAsync(CreateProductRequest request, CancellationToken cancellationToken)
     {
-        var brandResult = await productReferences.EnsureBrandExistsAsync(request.BrandId);
+        var brandResult = await productReferences.EnsureBrandExistsAsync(request.BrandId, cancellationToken);
         if (!brandResult.IsSuccess)
             return brandResult.Error!;
 
-        var categoriesResult = await productReferences.GetCategoriesAsync(request.CategoryIds ?? []);
+        var categoriesResult = await productReferences.GetCategoriesAsync(request.CategoryIds ?? [], cancellationToken);
         if (!categoriesResult.IsSuccess)
             return categoriesResult.Error!;
 
         var product = request.ToEntity(categoriesResult.Value!);
 
-        if (await productRepository.SkuExistsAsync(product.Sku))
+        if (await productRepository.SkuExistsAsync(product.Sku, null, cancellationToken))
             return ProductErrors.SkuAlreadyExists(product.Sku);
 
-        await productRepository.AddAsync(product);
+        await productRepository.AddAsync(product, cancellationToken);
 
         logger.LogInformation("Product {ProductId} created with SKU {Sku}", product.Id, product.Sku);
 

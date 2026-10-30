@@ -10,8 +10,8 @@ namespace MiniMarket.Catalog.Features.Products.ListProducts;
 internal sealed class ListProductsEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app) =>
-        app.MapGet("/api/products", async (string? categorySlug, ListProductsHandler handler) =>
-            (await handler.HandleAsync(categorySlug)).ToHttpResult())
+        app.MapGet("/api/products", async (string? categorySlug, ListProductsHandler handler, CancellationToken cancellationToken) =>
+            (await handler.HandleAsync(categorySlug, cancellationToken)).ToHttpResult())
         .WithTags("Products")
         .ProducesApiResponse<IReadOnlyList<ProductResponse>>();
 }

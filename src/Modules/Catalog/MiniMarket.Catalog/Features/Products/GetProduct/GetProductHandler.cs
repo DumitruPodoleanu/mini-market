@@ -8,9 +8,9 @@ namespace MiniMarket.Catalog.Features.Products.GetProduct;
 
 internal sealed class GetProductHandler(IProductRepository productRepository)
 {
-    public async Task<Result<ProductResponse>> HandleAsync(Guid id)
+    public async Task<Result<ProductResponse>> HandleAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(id);
+        var product = await productRepository.GetByIdAsync(id, cancellationToken);
 
         if (product is null)
             return ProductErrors.NotFound(id);

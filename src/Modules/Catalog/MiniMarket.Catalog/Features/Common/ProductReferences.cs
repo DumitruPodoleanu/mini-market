@@ -7,18 +7,18 @@ namespace MiniMarket.Catalog.Features.Common;
 
 internal sealed class ProductReferences(IBrandRepository brandRepository, ICategoryRepository categoryRepository)
 {
-    public async Task<Result> EnsureBrandExistsAsync(Guid brandId)
+    public async Task<Result> EnsureBrandExistsAsync(Guid brandId, CancellationToken cancellationToken)
     {
-        if (!await brandRepository.ExistsAsync(brandId))
+        if (!await brandRepository.ExistsAsync(brandId, cancellationToken))
             return ProductErrors.BrandNotFound(brandId);
 
         return Result.Success();
     }
 
-    public async Task<Result<IReadOnlyList<CategoryEntity>>> GetCategoriesAsync(IReadOnlyCollection<Guid> categoryIds)
+    public async Task<Result<IReadOnlyList<CategoryEntity>>> GetCategoriesAsync(IReadOnlyCollection<Guid> categoryIds, CancellationToken cancellationToken)
     {
         var distinctIds = categoryIds.Distinct().ToList();
-        var categories = await categoryRepository.GetByIdsAsync(distinctIds);
+        var categories = await categoryRepository.GetByIdsAsync(distinctIds, cancellationToken);
 
         var missingIds = distinctIds.Except(categories.Select(c => c.Id)).ToList();
         if (missingIds.Count > 0)

@@ -9,8 +9,8 @@ namespace MiniMarket.Catalog.Features.Products.DeleteProduct;
 internal sealed class DeleteProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app) =>
-        app.MapDelete("/api/products/{id:guid}", async (Guid id, DeleteProductHandler handler) =>
-            (await handler.HandleAsync(id)).ToHttpResult())
+        app.MapDelete("/api/products/{id:guid}", async (Guid id, DeleteProductHandler handler, CancellationToken cancellationToken) =>
+            (await handler.HandleAsync(id, cancellationToken)).ToHttpResult())
         .WithTags("Products")
         .ProducesApiResponse<object>()
         .ProducesApiErrors(StatusCodes.Status404NotFound);

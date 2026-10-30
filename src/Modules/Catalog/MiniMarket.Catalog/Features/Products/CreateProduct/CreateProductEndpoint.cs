@@ -10,8 +10,8 @@ namespace MiniMarket.Catalog.Features.Products.CreateProduct;
 internal sealed class CreateProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app) =>
-        app.MapPost("/api/products", async (CreateProductRequest request, CreateProductHandler handler) =>
-            (await handler.HandleAsync(request)).ToCreatedHttpResult("/api/products"))
+        app.MapPost("/api/products", async (CreateProductRequest request, CreateProductHandler handler, CancellationToken cancellationToken) =>
+            (await handler.HandleAsync(request, cancellationToken)).ToCreatedHttpResult("/api/products"))
         .AddEndpointFilter<ValidationFilter<CreateProductRequest>>()
         .WithTags("Products")
         .ProducesApiResponse<Guid>(StatusCodes.Status201Created)
