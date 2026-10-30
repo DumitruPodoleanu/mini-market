@@ -9,4 +9,5 @@ internal interface ICatalogDbContext
     DbSet<BrandEntity> Brands { get; }
     DbSet<CategoryEntity> Categories { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    DbSet<TEntity> Set<TEntity>() where TEntity : class;
 }

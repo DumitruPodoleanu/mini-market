@@ -5,14 +5,15 @@ using MiniMarket.Catalog.Infrastructure.Persistence;
 
 namespace MiniMarket.Catalog.Infrastructure.Repositories;
 
-internal sealed class ProductRepository(ICatalogDbContext dbContext) : IProductRepository
+internal sealed class ProductRepository(ICatalogDbContext dbContext)
+    : Repository<ProductEntity>(dbContext), IProductRepository
 {
     private IQueryable<ProductEntity> ProductsWithDetails =>
-        dbContext.Products
+        Entities
             .Include(p => p.Brand)
             .Include(p => p.Categories);
 
-    public Task<ProductEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+    public override Task<ProductEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
         ProductsWithDetails
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
@@ -32,22 +33,5 @@ internal sealed class ProductRepository(ICatalogDbContext dbContext) : IProductR
     }
 
     public Task<bool> SkuExistsAsync(string sku, Guid? excludedProductId, CancellationToken cancellationToken) =>
-        dbContext.Products.AnyAsync(p => p.Sku == sku && p.Id != excludedProductId, cancellationToken);
-
-    public async Task AddAsync(ProductEntity product, CancellationToken cancellationToken)
-    {
-        dbContext.Products.Add(product);
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task UpdateAsync(ProductEntity product, CancellationToken cancellationToken)
-    {
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task DeleteAsync(ProductEntity product, CancellationToken cancellationToken)
-    {
-        dbContext.Products.Remove(product);
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
+        Entities.AnyAsync(p => p.Sku == sku && p.Id != excludedProductId, cancellationToken);
 }

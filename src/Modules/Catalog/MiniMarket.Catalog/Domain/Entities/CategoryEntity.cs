@@ -1,8 +1,7 @@
 namespace MiniMarket.Catalog.Domain.Entities;
 
-internal sealed class CategoryEntity
+internal sealed class CategoryEntity : BaseEntity
 {
-    public Guid Id { get; set; }
     public required string Name { get; set; }
     public required string Slug { get; set; }
 }

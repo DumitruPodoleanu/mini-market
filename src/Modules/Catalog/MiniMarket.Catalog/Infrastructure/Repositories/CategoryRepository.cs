@@ -5,8 +5,9 @@ using MiniMarket.Catalog.Infrastructure.Persistence;
 
 namespace MiniMarket.Catalog.Infrastructure.Repositories;
 
-internal sealed class CategoryRepository(ICatalogDbContext dbContext) : ICategoryRepository
+internal sealed class CategoryRepository(ICatalogDbContext dbContext)
+    : Repository<CategoryEntity>(dbContext), ICategoryRepository
 {
     public async Task<IReadOnlyList<CategoryEntity>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>
-        await dbContext.Categories.Where(c => ids.Contains(c.Id)).ToListAsync(cancellationToken);
+        await Entities.Where(c => ids.Contains(c.Id)).ToListAsync(cancellationToken);
 }
