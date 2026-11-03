@@ -1,6 +1,9 @@
+using MiniMarket.Catalog.Domain.Entities.Common;
+using MiniMarket.Catalog.Domain.Entities.Translations;
+
 namespace MiniMarket.Catalog.Domain.Entities;
 
-internal sealed class ProductEntity : BaseEntity
+internal sealed class ProductEntity : TranslatableEntity<ProductTranslationEntity>
 {
     public required string Sku { get; set; }
     public required string Name { get; set; }
@@ -9,5 +12,7 @@ internal sealed class ProductEntity : BaseEntity
     public int StockQuantity { get; set; }
     public Guid BrandId { get; set; }
     public BrandEntity? Brand { get; set; }
+    public Guid VendorId { get; set; }
+    public VendorEntity? Vendor { get; set; }
     public List<CategoryEntity> Categories { get; set; } = [];
 }

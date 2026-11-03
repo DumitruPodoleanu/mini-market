@@ -11,10 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="MiniMarket.Catalog.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\MiniMarket.Shared\MiniMarket.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AnyAscii" Version="0.3.3" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
   </ItemGroup>

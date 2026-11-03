@@ -1,4 +1,4 @@
-namespace MiniMarket.Catalog.Domain.Entities;
+namespace MiniMarket.Catalog.Domain.Entities.Common;
 
 internal abstract class BaseEntity
 {

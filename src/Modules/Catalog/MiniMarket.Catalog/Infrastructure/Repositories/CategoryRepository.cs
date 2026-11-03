@@ -8,6 +8,6 @@ namespace MiniMarket.Catalog.Infrastructure.Repositories;
 internal sealed class CategoryRepository(ICatalogDbContext dbContext)
     : Repository<CategoryEntity>(dbContext), ICategoryRepository
 {
-    public async Task<IReadOnlyList<CategoryEntity>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>
-        await Entities.Where(c => ids.Contains(c.Id)).ToListAsync(cancellationToken);
+    public async Task<IReadOnlyList<CategoryEntity>> GetBySlugsAsync(IReadOnlyCollection<string> slugs, CancellationToken cancellationToken) =>
+        await Entities.Include(c => c.Slug).Where(c => slugs.Contains(c.Slug!.Value)).ToListAsync(cancellationToken);
 }

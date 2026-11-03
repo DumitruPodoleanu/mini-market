@@ -9,12 +9,12 @@ internal sealed class DeleteProductHandler(
     IProductRepository productRepository,
     ILogger<DeleteProductHandler> logger)
 {
-    public async Task<Result> HandleAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Result> HandleAsync(string slug, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdForUpdateAsync(id, cancellationToken);
+        var product = await productRepository.GetBySlugForUpdateAsync(slug, cancellationToken);
 
         if (product is null)
-            return ProductErrors.NotFound(id);
+            return ProductErrors.NotFound(slug);
 
         await productRepository.DeleteAsync(product, cancellationToken);
 

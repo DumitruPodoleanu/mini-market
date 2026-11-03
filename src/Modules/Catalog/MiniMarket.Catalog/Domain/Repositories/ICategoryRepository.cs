@@ -4,5 +4,5 @@ namespace MiniMarket.Catalog.Domain.Repositories;
 
 internal interface ICategoryRepository : IRepository<CategoryEntity>
 {
-    Task<IReadOnlyList<CategoryEntity>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken);
+    Task<IReadOnlyList<CategoryEntity>> GetBySlugsAsync(IReadOnlyCollection<string> slugs, CancellationToken cancellationToken);
 }

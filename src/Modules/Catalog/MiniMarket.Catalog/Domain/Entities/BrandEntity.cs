@@ -1,7 +1,8 @@
+using MiniMarket.Catalog.Domain.Entities.Common;
+
 namespace MiniMarket.Catalog.Domain.Entities;
 
-internal sealed class BrandEntity : BaseEntity
+internal sealed class BrandEntity : SluggableEntity
 {
     public required string Name { get; set; }
-    public required string Slug { get; set; }
 }

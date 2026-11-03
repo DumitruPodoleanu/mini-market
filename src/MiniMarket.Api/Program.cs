@@ -22,6 +22,7 @@ await app.MigrateCatalogDatabaseAsync();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseExceptionHandler();
+app.UseRequestLocalization();
 
 app.MapCatalogEndpoints();
 

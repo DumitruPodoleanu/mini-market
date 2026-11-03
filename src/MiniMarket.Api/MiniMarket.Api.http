@@ -1,56 +1,127 @@
 @baseUrl = http://localhost:8080
 
 ### List all products
-# 200: data = the 4 seed products, ordered by name
+# 200: items = the 13 seed products ordered by name, totalItems 13, totalPages 1
 GET {{baseUrl}}/api/products
 
 ### List products in one category
-# 200: data = Ashwagandha and Rhodiola
-GET {{baseUrl}}/api/products?categorySlug=plante-adaptogene
+# 200: items = the 5 phones
+GET {{baseUrl}}/api/products?categorySlug=telefoane
 
-### Get one product
-# 200: data = Ashwagandha 60 caps, brand Now Foods, 2 categories
-GET {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000001
+### Search by name
+# 200: items = both AirPods Pro 2 (iStore and Smart Store), case-insensitive
+GET {{baseUrl}}/api/products?name=airpods
 
-### Create a product
-# 201: data = the new product id, Location header = /api/products/<id>
-# The SKU is random so this can be sent again without a 409.
-# Send this first: the update and delete below use its id.
+### Filter by brand and published
+# 200: items = the 7 published Apple products, Ceas Apple Watch Series 10 is left out
+GET {{baseUrl}}/api/products?brandSlug=apple&published=true
+
+### Filter by price range
+# 200: items = both AirPods Pro 2, Căști Sony WH-1000XM5, Redmi Note 14 Pro
+GET {{baseUrl}}/api/products?minPrice=4000&maxPrice=7000
+
+### Sort and paginate
+# 200: items = MacBook Pro, Galaxy S25 Ultra, iPhone 16 Pro; totalItems 13, totalPages 5
+GET {{baseUrl}}/api/products?sort=priceDesc&pageSize=3
+
+### Get a product in Russian
+# 200: name = Наушники Sony WH-1000XM5, category = Наушники
+GET {{baseUrl}}/api/products/casti-sony-wh-1000xm5
+Accept-Language: ru
+
+### Get the same product in Romanian
+# 200: name = Căști Sony WH-1000XM5, category = Căști
+GET {{baseUrl}}/api/products/casti-sony-wh-1000xm5
+Accept-Language: ro
+
+### Get with an unsupported language
+# 200: falls back to Romanian, name = Căști Sony WH-1000XM5
+GET {{baseUrl}}/api/products/casti-sony-wh-1000xm5
+Accept-Language: en
+
+### Get in Russian a product that has no translation
+# 200: name stays iPhone 15 128GB, but the category is Телефоны
+GET {{baseUrl}}/api/products/iphone-15-128gb
+Accept-Language: ru
+
+### List in Russian
+# 200: Ноутбук MacBook Air 13 M4 16GB 256GB and MacBook Pro 14 M4 Pro, both in Ноутбуки
+GET {{baseUrl}}/api/products?categorySlug=laptopuri
+Accept-Language: ru
+
+### Search by a translated name
+# 200: items = Căști Sony WH-1000XM5; the search also matches Russian names
+GET {{baseUrl}}/api/products?name=наушники
+
+### Upsert: create a new product
+# 201, Location: /api/products/airpods-4, slug airpods-4, published false, stockQuantity 0
+# Running it again updates the same product and returns 200
 # @name createProduct
-POST {{baseUrl}}/api/products
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MXP63
 Content-Type: application/json
 
 {
-  "sku": "  demo-{{$randomInt 1000 9999}}  ",
-  "name": "  Ginseng 60 caps  ",
-  "price": 159.90,
-  "published": true,
-  "stockQuantity": 30,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001", "c0000000-0000-0000-0000-000000000002"]
+  "name": "AirPods 4",
+  "price": 2999,
+  "brandSlug": "apple",
+  "categorySlugs": ["casti"]
 }
 
 ### Get the created product
-# 200: SKU stored trimmed and uppercased (DEMO-1234), name trimmed
-GET {{baseUrl}}/api/products/{{createProduct.response.body.$.data}}
+# 200: AirPods 4, vendor iStore, brand Apple, category Căști
+GET {{baseUrl}}/api/products/{{createProduct.response.body.$.data.slug}}
 
-### Update the created product
-# 200: { success: true, data: null, errors: [] }
-# Changes the name, price and stock, and keeps one category instead of two
-PUT {{baseUrl}}/api/products/{{createProduct.response.body.$.data}}
+### Upsert: same product at another vendor
+# 201: same SKU and name, but a separate product with slug airpods-4-2
+PATCH {{baseUrl}}/api/products?vendorSlug=smart-store&sku=MXP63
 Content-Type: application/json
 
 {
-  "sku": "demo-{{$randomInt 1000 9999}}",
-  "name": "Ginseng 120 caps",
-  "price": 279.00,
-  "published": false,
-  "stockQuantity": 12,
-  "brandId": "b0000000-0000-0000-0000-000000000002",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "name": "AirPods 4",
+  "price": 2899,
+  "brandSlug": "apple",
+  "categorySlugs": ["casti"]
+}
+
+### Upsert: update the price only
+# 200: iStore AirPods Pro 2, price 4699, every other field unchanged
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+Content-Type: application/json
+
+{
+  "price": 4699
+}
+
+### Upsert: the SKU is normalized before the lookup
+# 200: " mtjv3 " finds MTJV3, the same product as above
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=%20mtjv3%20
+Content-Type: application/json
+
+{
+  "stockQuantity": 30,
+  "published": true
+}
+
+### Upsert: change brand and categories
+# 200: Smart Store's Sony headphones move to Samsung and get two categories
+PATCH {{baseUrl}}/api/products?vendorSlug=smart-store&sku=WH1000XM5B
+Content-Type: application/json
+
+{
+  "brandSlug": "samsung-2",
+  "categorySlugs": ["casti", "smartwatch-uri"]
+}
+
+### Upsert: rename the slug
+# 200: slug becomes airpods-pro-2-gen2, the product keeps the same slug row
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+Content-Type: application/json
+
+{
+  "slug": "airpods-pro-2-gen2"
 }
 
 ### Delete the created product
-# 200: { success: true, data: null, errors: [] }
+# 204 with no body; the product's slug row is deleted with it
 # Sending it a second time gives 404, because the product is gone
-DELETE {{baseUrl}}/api/products/{{createProduct.response.body.$.data}}
+DELETE {{baseUrl}}/api/products/{{createProduct.response.body.$.data.slug}}

@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MiniMarket.Catalog.Infrastructure;
 using MiniMarket.Catalog.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -24,7 +23,7 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MiniMarket.Catalog.Domain.Brand", b =>
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.BrandEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,20 +34,18 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<Guid>("SlugId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Slug")
+                    b.HasIndex("SlugId")
                         .IsUnique();
 
                     b.ToTable("Brands", "catalog");
                 });
 
-            modelBuilder.Entity("MiniMarket.Catalog.Domain.Category", b =>
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.CategoryEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,20 +56,18 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<Guid>("SlugId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Slug")
+                    b.HasIndex("SlugId")
                         .IsUnique();
 
                     b.ToTable("Categories", "catalog");
                 });
 
-            modelBuilder.Entity("MiniMarket.Catalog.Domain.Product", b =>
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.ProductEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,17 +93,72 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<Guid>("SlugId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("StockQuantity")
                         .HasColumnType("integer");
+
+                    b.Property<Guid>("VendorId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("Sku")
+                    b.HasIndex("SlugId")
+                        .IsUnique();
+
+                    b.HasIndex("VendorId", "Sku")
                         .IsUnique();
 
                     b.ToTable("Products", "catalog");
+                });
+
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.Slugs.SlugEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Value")
+                        .IsUnique();
+
+                    b.ToTable("Slugs", "catalog");
+                });
+
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.VendorEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("SlugId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SlugId")
+                        .IsUnique();
+
+                    b.ToTable("Vendors", "catalog");
                 });
 
             modelBuilder.Entity("ProductCategories", b =>
@@ -126,26 +176,121 @@ namespace MiniMarket.Catalog.Infrastructure.Migrations
                     b.ToTable("ProductCategories", "catalog");
                 });
 
-            modelBuilder.Entity("MiniMarket.Catalog.Domain.Product", b =>
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.BrandEntity", b =>
                 {
-                    b.HasOne("MiniMarket.Catalog.Domain.Brand", "Brand")
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.Slugs.SlugEntity", "Slug")
+                        .WithOne()
+                        .HasForeignKey("MiniMarket.Catalog.Domain.Entities.BrandEntity", "SlugId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Slug");
+                });
+
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.CategoryEntity", b =>
+                {
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.Slugs.SlugEntity", "Slug")
+                        .WithOne()
+                        .HasForeignKey("MiniMarket.Catalog.Domain.Entities.CategoryEntity", "SlugId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsMany("MiniMarket.Catalog.Domain.Entities.Translations.CategoryTranslationEntity", "Translations", b1 =>
+                        {
+                            b1.Property<Guid>("CategoryId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Language")
+                                .HasMaxLength(2)
+                                .HasColumnType("character varying(2)");
+
+                            b1.Property<string>("Name")
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.HasKey("CategoryId", "Language");
+
+                            b1.ToTable("CategoryTranslations", "catalog");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CategoryId");
+                        });
+
+                    b.Navigation("Slug");
+
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.ProductEntity", b =>
+                {
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.BrandEntity", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.Slugs.SlugEntity", "Slug")
+                        .WithOne()
+                        .HasForeignKey("MiniMarket.Catalog.Domain.Entities.ProductEntity", "SlugId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.VendorEntity", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsMany("MiniMarket.Catalog.Domain.Entities.Translations.ProductTranslationEntity", "Translations", b1 =>
+                        {
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Language")
+                                .HasMaxLength(2)
+                                .HasColumnType("character varying(2)");
+
+                            b1.Property<string>("Name")
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.HasKey("ProductId", "Language");
+
+                            b1.ToTable("ProductTranslations", "catalog");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
                     b.Navigation("Brand");
+
+                    b.Navigation("Slug");
+
+                    b.Navigation("Translations");
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("MiniMarket.Catalog.Domain.Entities.VendorEntity", b =>
+                {
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.Slugs.SlugEntity", "Slug")
+                        .WithOne()
+                        .HasForeignKey("MiniMarket.Catalog.Domain.Entities.VendorEntity", "SlugId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Slug");
                 });
 
             modelBuilder.Entity("ProductCategories", b =>
                 {
-                    b.HasOne("MiniMarket.Catalog.Domain.Category", null)
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.CategoryEntity", null)
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MiniMarket.Catalog.Domain.Product", null)
+                    b.HasOne("MiniMarket.Catalog.Domain.Entities.ProductEntity", null)
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)

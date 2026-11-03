@@ -35,7 +35,11 @@ internal static class InfrastructureRegistration
 
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<IVendorRepository, VendorRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ISlugRepository, SlugRepository>();
+
+        services.AddExceptionHandler<UniqueViolationExceptionHandler>();
 
         return services;
     }

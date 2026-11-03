@@ -11,7 +11,6 @@ internal sealed class BrandConfiguration : IEntityTypeConfiguration<BrandEntity>
     {
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Name).HasMaxLength(BrandConstraints.NameMaxLength).IsRequired();
-        builder.Property(b => b.Slug).HasMaxLength(BrandConstraints.SlugMaxLength).IsRequired();
-        builder.HasIndex(b => b.Slug).IsUnique();
+        builder.HasSlug();
     }
 }

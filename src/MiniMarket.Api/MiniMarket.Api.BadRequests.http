@@ -1,226 +1,210 @@
 @baseUrl = http://localhost:8080
-@missingId = 11111111-1111-1111-1111-111111111111
+@missingSlug = no-such-product
 
 ### Get a product that does not exist
-# 404: errors = ["Product 11111111-1111-1111-1111-111111111111 was not found."]
-GET {{baseUrl}}/api/products/{{missingId}}
+# 404: errors = ["Product with slug 'no-such-product' was not found."]
+GET {{baseUrl}}/api/products/{{missingSlug}}
 
-### Get with an id that is not a valid guid
-# 404 with an EMPTY body: the {id:guid} route constraint fails, so no endpoint runs
-GET {{baseUrl}}/api/products/not-a-guid
+### List with a page below 1
+# 400: errors = ["Page must be at least 1."]
+GET {{baseUrl}}/api/products?page=0
 
-### Create with several invalid fields at once
+### List with a page size above the maximum
+# 400: errors = ["Page size must be between 1 and 100."]
+GET {{baseUrl}}/api/products?pageSize=101
+
+### List with a minimum price above the maximum
+# 400: errors = ["Minimum price cannot be greater than maximum price."]
+GET {{baseUrl}}/api/products?minPrice=500&maxPrice=100
+
+### List with an unknown sort
+# 400: errors = ["Sort must be one of: nameAsc, priceAsc, priceDesc."]
+GET {{baseUrl}}/api/products?sort=cheapest
+
+### List with LIKE wildcards in the name
+# 200 with no items: % and _ are escaped and searched as plain characters
+GET {{baseUrl}}/api/products?name=%25
+
+### Upsert without a vendor
+# 400: errors = ["Vendor slug is required."]
+PATCH {{baseUrl}}/api/products?sku=MTJV3
+Content-Type: application/json
+
+{
+  "price": 100
+}
+
+### Upsert without a SKU
+# 400: errors = ["SKU is required."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore
+Content-Type: application/json
+
+{
+  "price": 100
+}
+
+### Upsert with several invalid fields at once
 # 400: errors = ["SKU is required.", "Price must be greater than zero.", "Stock quantity cannot be negative."]
-POST {{baseUrl}}/api/products
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=
 Content-Type: application/json
 
 {
-  "sku": "",
-  "name": "Ginseng 60 caps",
   "price": -5,
-  "published": true,
-  "stockQuantity": -2,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "stockQuantity": -2
 }
 
-### Create without a name
-# 400: errors = ["Name is required."]
-POST {{baseUrl}}/api/products
-Content-Type: application/json
-
-{
-  "sku": "NONAME-1",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
-}
-
-### Create with a SKU in the wrong format
+### Upsert with a SKU in the wrong format
 # 400: errors = ["SKU can only contain letters, digits and dashes."]
-POST {{baseUrl}}/api/products
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=HERB%20001!
 Content-Type: application/json
 
 {
-  "sku": "HERB 001!",
-  "name": "Bad SKU",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "price": 100
 }
 
-### Create with a SKU longer than 50 characters (51 here)
+### Upsert with a SKU longer than 50 characters (51 here)
 # 400: errors = ["SKU cannot exceed 50 characters."]
-POST {{baseUrl}}/api/products
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Content-Type: application/json
 
 {
-  "sku": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "name": "Long SKU",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "price": 100
 }
 
-### Create with a name longer than 100 characters (101 here)
+### Upsert with an empty name
+# 400: errors = ["Name cannot be empty."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+### Upsert with a name longer than 100 characters (101 here)
 # 400: errors = ["Name cannot exceed 100 characters."]
-POST {{baseUrl}}/api/products
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
 Content-Type: application/json
 
 {
-  "sku": "LONGNAME-1",
-  "name": "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "name": "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"
 }
 
-### Create without a brand
-# 400: errors = ["Brand ID is required."]
-POST {{baseUrl}}/api/products
+### Upsert with an empty brand slug
+# 400: errors = ["Brand slug cannot be empty."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
 Content-Type: application/json
 
 {
-  "sku": "NOBRAND-1",
-  "name": "No brand",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "00000000-0000-0000-0000-000000000000",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "brandSlug": ""
 }
 
-### Create without categories
-# 400: errors = ["At least one category ID is required."]
-POST {{baseUrl}}/api/products
+### Upsert with an empty category list
+# 400: errors = ["At least one category is required."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
 Content-Type: application/json
 
 {
-  "sku": "NOCAT-1",
-  "name": "No categories",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": []
+  "categorySlugs": []
 }
 
-### Create with an empty category id
-# 400: errors = ["Category IDs cannot be empty."]
-POST {{baseUrl}}/api/products
+### Upsert with an empty category slug
+# 400: errors = ["Category slugs cannot be empty."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
 Content-Type: application/json
 
 {
-  "sku": "EMPTYCAT-1",
-  "name": "Empty category id",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["00000000-0000-0000-0000-000000000000"]
+  "categorySlugs": ["casti", ""]
 }
 
-### Create with a brand that does not exist
-# 400: errors = ["Brand 11111111-1111-1111-1111-111111111111 does not exist."]
-# Passes validation; the handler finds the brand missing in the database
-POST {{baseUrl}}/api/products
+### Upsert a new product without the required fields
+# 400: errors = ["Missing fields for a new product: Name, BrandSlug, CategorySlugs."]
+# Passes validation; the handler finds no product for istore + NEW-002, so it needs the create fields
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=NEW-002
 Content-Type: application/json
 
 {
-  "sku": "GHOSTBRAND-1",
-  "name": "Unknown brand",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "{{missingId}}",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "price": 100
 }
 
-### Create with a category that does not exist
-# 400: errors = ["Categories do not exist: 11111111-1111-1111-1111-111111111111."]
-POST {{baseUrl}}/api/products
+### Upsert with a vendor that does not exist
+# 404: errors = ["Vendor with slug 'nope' does not exist."]
+# 404 because the vendor is part of the address, not the body
+PATCH {{baseUrl}}/api/products?vendorSlug=nope&sku=MTJV3
 Content-Type: application/json
 
 {
-  "sku": "GHOSTCAT-1",
-  "name": "Unknown category",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001", "{{missingId}}"]
+  "price": 100
 }
 
-### Create with a SKU that already exists
-# 409: errors = ["A product with SKU HERB-001 already exists."]
-# Lowercase with spaces on purpose: it is normalized to HERB-001 before the check
-POST {{baseUrl}}/api/products
+### Upsert with a brand that does not exist
+# 400: errors = ["Brand with slug 'aple' does not exist."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
 Content-Type: application/json
 
 {
-  "sku": "  herb-001  ",
-  "name": "Duplicate SKU",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
+  "brandSlug": "aple"
 }
 
-### Create with JSON that cannot be read (a blank string where a guid is expected)
+### Upsert with a category that does not exist
+# 400: errors = ["Categories do not exist: nope."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+Content-Type: application/json
+
+{
+  "categorySlugs": ["casti", "nope"]
+}
+
+### Upsert with a slug taken by another product
+# 409: errors = ["Slug 'airpods-pro-2-2' is already used by a product."]
+# airpods-pro-2-2 belongs to the Smart Store AirPods; nothing is saved
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+Content-Type: application/json
+
+{
+  "slug": "airpods-pro-2-2",
+  "price": 1
+}
+
+### Upsert with a slug taken by a vendor
+# 409: errors = ["Slug 'samsung' is already used by a vendor."]
+PATCH {{baseUrl}}/api/products?vendorSlug=samsung&sku=SM-S938B
+Content-Type: application/json
+
+{
+  "slug": "samsung"
+}
+
+### Upsert with a slug unrelated to the name
+# 400: errors = ["Slug 'banana' must share at least one word with the name."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+Content-Type: application/json
+
+{
+  "slug": "banana"
+}
+
+### Upsert with a slug that has no letters or digits
+# 400: errors = ["Slug '!!!' contains no letters or digits."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+Content-Type: application/json
+
+{
+  "slug": "!!!"
+}
+
+### Upsert without a body
+# 400: errors = ["Request body is required."]
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
+
+### Upsert with JSON that cannot be read (text where a number is expected)
 # 400, not an envelope: the JSON fails to convert before validation runs
-POST {{baseUrl}}/api/products
+PATCH {{baseUrl}}/api/products?vendorSlug=istore&sku=MTJV3
 Content-Type: application/json
 
 {
-  "sku": "BADJSON-1",
-  "name": "Bad JSON",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": [" "]
-}
-
-### Update a product that does not exist
-# 404: errors = ["Product 11111111-1111-1111-1111-111111111111 was not found."]
-PUT {{baseUrl}}/api/products/{{missingId}}
-Content-Type: application/json
-
-{
-  "sku": "HERB-999",
-  "name": "Missing product",
-  "price": 10,
-  "published": true,
-  "stockQuantity": 1,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001"]
-}
-
-### Update a product with another product's SKU
-# 409: errors = ["A product with SKU VIT-001 already exists."]
-# Nothing is saved: Ashwagandha keeps HERB-001
-PUT {{baseUrl}}/api/products/a0000000-0000-0000-0000-000000000001
-Content-Type: application/json
-
-{
-  "sku": "VIT-001",
-  "name": "Ashwagandha 60 caps",
-  "price": 189.90,
-  "published": true,
-  "stockQuantity": 25,
-  "brandId": "b0000000-0000-0000-0000-000000000001",
-  "categoryIds": ["c0000000-0000-0000-0000-000000000001", "c0000000-0000-0000-0000-000000000002"]
+  "price": "abc"
 }
 
 ### Delete a product that does not exist
-# 404: errors = ["Product 11111111-1111-1111-1111-111111111111 was not found."]
-DELETE {{baseUrl}}/api/products/{{missingId}}
+# 404: errors = ["Product with slug 'no-such-product' was not found."]
+DELETE {{baseUrl}}/api/products/{{missingSlug}}

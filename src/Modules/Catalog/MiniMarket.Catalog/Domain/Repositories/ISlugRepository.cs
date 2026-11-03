@@ -1,0 +1,10 @@
+using MiniMarket.Catalog.Domain.Entities;
+using MiniMarket.Catalog.Domain.Entities.Slugs;
+
+namespace MiniMarket.Catalog.Domain.Repositories;
+
+internal interface ISlugRepository : IRepository<SlugEntity>
+{
+    Task<SlugEntityType?> GetOwnerTypeAsync(string value, Guid? excludedSlugId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<string>> GetTakenWithPrefixAsync(string root, CancellationToken cancellationToken);
+}

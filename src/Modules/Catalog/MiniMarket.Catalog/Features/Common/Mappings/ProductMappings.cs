@@ -1,50 +1,81 @@
 using MiniMarket.Catalog.Domain.Entities;
+using MiniMarket.Catalog.Domain.Entities.Slugs;
 using MiniMarket.Catalog.Features.Common.Contracts;
+using MiniMarket.Catalog.Features.Common.Localization;
+using MiniMarket.Catalog.Features.Products.UpsertProduct;
 
 namespace MiniMarket.Catalog.Features.Common.Mappings;
 
 internal static class ProductMappings
 {
-    public static void MapTo(this IProductRequest request, ProductEntity product, IReadOnlyList<CategoryEntity> categories)
-    {
-        product.Sku = NormalizeSku(request.Sku);
-        product.Name = NormalizeName(request.Name);
-        product.Price = request.Price;
-        product.Published = request.Published;
-        product.StockQuantity = request.StockQuantity;
-        product.BrandId = request.BrandId;
-
-        product.Categories.Clear();
-        foreach (var category in categories)
+    public static ProductEntity ToEntity(
+        this UpsertProductRequest request,
+        string sku,
+        string slug,
+        VendorEntity vendor,
+        BrandEntity brand,
+        IReadOnlyList<CategoryEntity> categories) => new()
         {
-            product.Categories.Add(category);
+            Id = Guid.CreateVersion7(),
+            Sku = sku,
+            Name = NormalizeName(request.Name!),
+            Slug = new SlugEntity { Id = Guid.CreateVersion7(), Value = slug, EntityType = SlugEntityType.Product },
+            Price = request.Price!.Value,
+            Published = request.Published ?? false,
+            StockQuantity = request.StockQuantity ?? 0,
+            Vendor = vendor,
+            Brand = brand,
+            Categories = [.. categories]
+        };
+
+    public static void ApplyTo(
+        this UpsertProductRequest request,
+        ProductEntity product,
+        BrandEntity? brand,
+        IReadOnlyList<CategoryEntity>? categories,
+        string? slug)
+    {
+        if (request.Name is not null)
+            product.Name = NormalizeName(request.Name);
+
+        if (request.Price is not null)
+            product.Price = request.Price.Value;
+
+        if (request.Published is not null)
+            product.Published = request.Published.Value;
+
+        if (request.StockQuantity is not null)
+            product.StockQuantity = request.StockQuantity.Value;
+
+        if (brand is not null)
+            product.Brand = brand;
+
+        if (categories is not null)
+        {
+            product.Categories.Clear();
+            foreach (var category in categories)
+            {
+                product.Categories.Add(category);
+            }
         }
+
+        if (slug is not null)
+            product.Slug!.Value = slug;
     }
 
-    public static ProductEntity ToEntity(this IProductRequest request, IReadOnlyList<CategoryEntity> categories) => new()
-    {
-        Id = Guid.CreateVersion7(),
-        Sku = NormalizeSku(request.Sku),
-        Name = NormalizeName(request.Name),
-        Price = request.Price,
-        Published = request.Published,
-        StockQuantity = request.StockQuantity,
-        BrandId = request.BrandId,
-        Categories = [.. categories]
-    };
-
-    public static ProductResponse ToResponse(this ProductEntity product) => new(
-        product.Id,
+    public static ProductResponse ToResponse(this ProductEntity product, string language) => new(
         product.Sku,
-        product.Name,
+        product.Translate(language, t => t.Name, product.Name),
+        product.Slug!.Value,
         product.Price,
         product.Published,
         product.StockQuantity,
         product.Brand!.ToResponse(),
-        product.Categories.Select(c => c.ToResponse()).ToList()
+        product.Vendor!.ToResponse(),
+        product.Categories.Select(c => c.ToResponse(language)).ToList()
     );
 
-    private static string NormalizeSku(string sku) => sku.Trim().ToUpperInvariant();
+    public static string NormalizeSku(string sku) => sku.Trim().ToUpperInvariant();
 
     private static string NormalizeName(string name) => name.Trim();
 }

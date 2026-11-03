@@ -24,5 +24,5 @@ public static class CatalogModule
     }
 
     public static Task MigrateCatalogDatabaseAsync(this WebApplication app) =>
-    app.Services.MigrateCatalogDatabaseAsync();
+        app.Services.MigrateCatalogDatabaseAsync();
 }

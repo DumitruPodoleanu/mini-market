@@ -9,4 +9,7 @@
   <Folder Name="/src/Shared/">
     <Project Path="src/Shared/MiniMarket.Shared/MiniMarket.Shared.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MiniMarket.Catalog.Tests/MiniMarket.Catalog.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -10,15 +10,21 @@ internal static class ResultExtensions
             ? Results.Ok(new ApiResponse<T>(true, result.Value, []))
             : ToFailure(result.Error!);
 
-    public static IResult ToHttpResult(this Result result) =>
-        result.IsSuccess
-            ? Results.Ok(new ApiResponse<object>(true, null, []))
-            : ToFailure(result.Error!);
+    public static IResult ToNoContentHttpResult(this Result result) =>
+        result.IsSuccess ? Results.NoContent() : ToFailure(result.Error!);
 
-    public static IResult ToCreatedHttpResult<T>(this Result<T> result, string basePath) =>
-        result.IsSuccess
-            ? Results.Created($"{basePath}/{result.Value}", new ApiResponse<T>(true, result.Value, []))
-            : ToFailure(result.Error!);
+    public static IResult ToUpsertHttpResult<T>(this Result<UpsertResult<T>> result, Func<T, string> location)
+    {
+        if (!result.IsSuccess)
+            return ToFailure(result.Error!);
+
+        var value = result.Value!.Value;
+        var response = new ApiResponse<T>(true, value, []);
+
+        return result.Value.Created
+            ? Results.Created(location(value), response)
+            : Results.Ok(response);
+    }
 
     private static IResult ToFailure(Error error) =>
         Results.Json(
