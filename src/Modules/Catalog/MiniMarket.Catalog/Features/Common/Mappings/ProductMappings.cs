@@ -1,3 +1,4 @@
+using MiniMarket.Catalog.Contracts;
 using MiniMarket.Catalog.Domain.Entities;
 using MiniMarket.Catalog.Domain.Entities.Slugs;
 using MiniMarket.Catalog.Features.Common.Contracts;
@@ -73,6 +74,15 @@ internal static class ProductMappings
         product.Brand!.ToResponse(),
         product.Vendor!.ToResponse(),
         product.Categories.Select(c => c.ToResponse(language)).ToList()
+    );
+
+    public static ProductSummary ToSummary(this ProductEntity product, string language) => new(
+        product.Id,
+        product.Slug!.Value,
+        product.Translate(language, t => t.Name, product.Name),
+        product.Price,
+        product.StockQuantity,
+        product.Published
     );
 
     public static string NormalizeSku(string sku) => sku.Trim().ToUpperInvariant();

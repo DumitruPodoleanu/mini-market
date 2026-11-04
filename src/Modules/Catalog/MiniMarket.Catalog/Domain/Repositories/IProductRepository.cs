@@ -9,4 +9,5 @@ internal interface IProductRepository : IRepository<ProductEntity>
     Task<ProductEntity?> GetByVendorAndSkuForUpdateAsync(Guid vendorId, string sku, CancellationToken cancellationToken);
     Task<ProductEntity?> GetBySlugAsync(string slug, CancellationToken cancellationToken);
     Task<ProductEntity?> GetBySlugForUpdateAsync(string slug, CancellationToken cancellationToken);
+    Task<IReadOnlyList<ProductEntity>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken);
 }

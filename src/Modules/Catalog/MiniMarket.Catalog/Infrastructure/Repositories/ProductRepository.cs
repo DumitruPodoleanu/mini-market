@@ -32,6 +32,13 @@ internal sealed class ProductRepository(ICatalogDbContext dbContext)
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Slug!.Value == slug, cancellationToken);
 
+    public async Task<IReadOnlyList<ProductEntity>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>
+        await Entities
+            .AsNoTracking()
+            .Include(p => p.Slug)
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+
     public async Task<(IReadOnlyList<ProductEntity> Items, int TotalItems)> GetPageAsync(
         ProductFilter filter, CancellationToken cancellationToken)
     {

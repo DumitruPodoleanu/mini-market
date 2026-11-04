@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
+using MiniMarket.Catalog.Contracts;
 using MiniMarket.Catalog.Domain.Constraints;
 using MiniMarket.Catalog.Features.Common;
 using MiniMarket.Catalog.Features.Common.Slugs;
@@ -19,7 +20,7 @@ internal static class FeaturesRegistration
     {
         services.AddScoped<ProductReferences>();
         services.AddScoped<SlugService>();
-
+        services.AddScoped<ICatalogApi, CatalogApi>();
         services.AddScoped<GetProductHandler>();
         services.AddScoped<ListProductsHandler>();
         services.AddScoped<DeleteProductHandler>();

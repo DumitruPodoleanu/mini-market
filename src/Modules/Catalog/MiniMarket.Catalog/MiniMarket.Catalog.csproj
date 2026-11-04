@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\MiniMarket.Shared\MiniMarket.Shared.csproj" />
     <ProjectReference Include="..\..\..\Shared\MiniMarket.Infrastructure\MiniMarket.Infrastructure.csproj" />
+    <ProjectReference Include="..\MiniMarket.Catalog.Contracts\MiniMarket.Catalog.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
