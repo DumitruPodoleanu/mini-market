@@ -2,9 +2,9 @@ using System.Reflection;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MiniMarket.Catalog.Features.Common.Endpoints;
+namespace MiniMarket.Infrastructure.Endpoints;
 
-internal static class EndpointExtensions
+public static class EndpointExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
     {

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using MiniMarket.Catalog.Features.Common.Endpoints;
-using MiniMarket.Catalog.Features.Common.Http;
+using MiniMarket.Infrastructure.Endpoints;
+using MiniMarket.Infrastructure.Http;
 
 namespace MiniMarket.Catalog.Features.Products.DeleteProduct;
 

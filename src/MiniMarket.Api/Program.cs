@@ -1,5 +1,7 @@
 using MiniMarket.Api.Middleware;
 using MiniMarket.Catalog;
+using MiniMarket.Infrastructure.Endpoints;
+using MiniMarket.Infrastructure.Persistence;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
 builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = false);
 builder.Services.AddOpenApi();
+builder.Services.AddExceptionHandler<UniqueViolationExceptionHandler>();
 
 builder.Services.AddCatalogModule(builder.Configuration);
 
@@ -24,6 +27,6 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseExceptionHandler();
 app.UseRequestLocalization();
 
-app.MapCatalogEndpoints();
+app.MapEndpoints();
 
 app.Run();

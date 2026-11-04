@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using MiniMarket.Shared.Results;
 using Npgsql;
 
-namespace MiniMarket.Catalog.Infrastructure.Persistence;
+namespace MiniMarket.Infrastructure.Persistence;
 
-internal sealed class UniqueViolationExceptionHandler : IExceptionHandler
+public sealed class UniqueViolationExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {

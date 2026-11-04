@@ -4,10 +4,10 @@ using MiniMarket.Catalog.Domain.Repositories;
 using MiniMarket.Catalog.Features.Common;
 using MiniMarket.Catalog.Features.Common.Contracts;
 using MiniMarket.Catalog.Features.Common.Errors;
-using MiniMarket.Catalog.Features.Common.Http;
 using MiniMarket.Catalog.Features.Common.Localization;
 using MiniMarket.Catalog.Features.Common.Mappings;
 using MiniMarket.Catalog.Features.Common.Slugs;
+using MiniMarket.Infrastructure.Http;
 using MiniMarket.Shared.Results;
 
 namespace MiniMarket.Catalog.Features.Products.UpsertProduct;

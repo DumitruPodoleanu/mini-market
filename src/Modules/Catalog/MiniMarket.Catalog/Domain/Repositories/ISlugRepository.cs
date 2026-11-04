@@ -1,5 +1,6 @@
 using MiniMarket.Catalog.Domain.Entities;
 using MiniMarket.Catalog.Domain.Entities.Slugs;
+using MiniMarket.Shared.Domain;
 
 namespace MiniMarket.Catalog.Domain.Repositories;
 

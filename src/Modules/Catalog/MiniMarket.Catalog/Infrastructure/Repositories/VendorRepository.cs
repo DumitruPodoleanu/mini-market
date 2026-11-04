@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MiniMarket.Catalog.Domain.Entities;
 using MiniMarket.Catalog.Domain.Repositories;
 using MiniMarket.Catalog.Infrastructure.Persistence;
+using MiniMarket.Infrastructure.Persistence;
 
 namespace MiniMarket.Catalog.Infrastructure.Repositories;
 

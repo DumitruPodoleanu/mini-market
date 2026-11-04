@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using MiniMarket.Catalog.Domain.Constraints;
 using MiniMarket.Catalog.Features.Common;
-using MiniMarket.Catalog.Features.Common.Endpoints;
 using MiniMarket.Catalog.Features.Common.Slugs;
 using MiniMarket.Catalog.Features.Products.DeleteProduct;
 using MiniMarket.Catalog.Features.Products.GetProduct;
 using MiniMarket.Catalog.Features.Products.ListProducts;
 using MiniMarket.Catalog.Features.Products.UpsertProduct;
+using MiniMarket.Infrastructure.Endpoints;
 
 namespace MiniMarket.Catalog.Features;
 

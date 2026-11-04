@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using MiniMarket.Catalog.Features.Common.Contracts;
-using MiniMarket.Catalog.Features.Common.Endpoints;
-using MiniMarket.Catalog.Features.Common.Http;
-using MiniMarket.Catalog.Features.Common.Validation;
+using MiniMarket.Infrastructure.Endpoints;
+using MiniMarket.Infrastructure.Http;
+using MiniMarket.Infrastructure.Validation;
 using MiniMarket.Shared.Results;
 
 namespace MiniMarket.Catalog.Features.Products.ListProducts;

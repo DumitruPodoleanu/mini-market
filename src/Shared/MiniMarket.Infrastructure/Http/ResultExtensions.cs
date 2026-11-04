@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using MiniMarket.Shared.Results;
 
-namespace MiniMarket.Catalog.Features.Common.Http;
+namespace MiniMarket.Infrastructure.Http;
 
-internal static class ResultExtensions
+public static class ResultExtensions
 {
     public static IResult ToHttpResult<T>(this Result<T> result) =>
         result.IsSuccess

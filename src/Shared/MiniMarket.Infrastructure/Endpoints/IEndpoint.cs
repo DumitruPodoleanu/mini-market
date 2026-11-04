@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Routing;
 
-namespace MiniMarket.Catalog.Features.Common.Endpoints;
+namespace MiniMarket.Infrastructure.Endpoints;
 
-internal interface IEndpoint
+public interface IEndpoint
 {
     void MapEndpoint(IEndpointRouteBuilder app);
 }

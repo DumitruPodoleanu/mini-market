@@ -2,9 +2,9 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using MiniMarket.Shared.Results;
 
-namespace MiniMarket.Catalog.Features.Common.Validation;
+namespace MiniMarket.Infrastructure.Validation;
 
-internal sealed class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
+public sealed class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {

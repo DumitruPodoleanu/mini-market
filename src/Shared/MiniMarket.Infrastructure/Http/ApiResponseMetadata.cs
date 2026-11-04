@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using MiniMarket.Shared.Results;
 
-namespace MiniMarket.Catalog.Features.Common.Http;
+namespace MiniMarket.Infrastructure.Http;
 
-internal static class ApiResponseMetadata
+public static class ApiResponseMetadata
 {
     public static RouteHandlerBuilder ProducesApiResponse<T>(this RouteHandlerBuilder builder, int statusCode = StatusCodes.Status200OK) =>
         builder.Produces<ApiResponse<T>>(statusCode);

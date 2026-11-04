@@ -1,4 +1,4 @@
-using MiniMarket.Catalog.Domain.Entities.Common;
+using MiniMarket.Shared.Domain;
 
 namespace MiniMarket.Catalog.Domain.Entities.Slugs;
 

@@ -1,15 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using MiniMarket.Catalog.Domain.Entities;
-using MiniMarket.Catalog.Domain.Entities.Common;
-using MiniMarket.Catalog.Domain.Repositories;
-using MiniMarket.Catalog.Infrastructure.Persistence;
+using MiniMarket.Shared.Domain;
 
-namespace MiniMarket.Catalog.Infrastructure.Repositories;
+namespace MiniMarket.Infrastructure.Persistence;
 
-internal abstract class Repository<TEntity>(ICatalogDbContext dbContext) : IRepository<TEntity>
+public abstract class Repository<TEntity>(IModuleDbContext dbContext) : IRepository<TEntity>
     where TEntity : BaseEntity
 {
-    protected ICatalogDbContext DbContext { get; } = dbContext;
+    protected IModuleDbContext DbContext { get; } = dbContext;
 
     protected DbSet<TEntity> Entities => DbContext.Set<TEntity>();
 
