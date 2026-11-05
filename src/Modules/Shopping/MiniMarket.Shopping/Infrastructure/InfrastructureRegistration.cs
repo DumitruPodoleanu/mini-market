@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MiniMarket.Shopping.Infrastructure.Persistence;
 using MiniMarket.Infrastructure.Persistence;
+using MiniMarket.Shopping.Domain.Repositories;
+using MiniMarket.Shopping.Infrastructure.Repositories;
 
 namespace MiniMarket.Shopping.Infrastructure;
 
@@ -22,6 +24,7 @@ internal static class InfrastructureRegistration
         });
 
         services.AddScoped<IShoppingDbContext>(serviceProvider => serviceProvider.GetRequiredService<ShoppingDbContext>());
+        services.AddScoped<IWishlistRepository, WishlistRepository>();
 
         return services;
     }

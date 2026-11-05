@@ -27,6 +27,7 @@ if (app.Environment.IsDevelopment())
 }
 
 await app.MigrateCatalogDatabaseAsync();
+await app.MigrateShoppingDatabaseAsync();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseExceptionHandler();

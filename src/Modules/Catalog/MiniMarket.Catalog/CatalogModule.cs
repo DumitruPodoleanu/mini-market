@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MiniMarket.Catalog.Features;
 using MiniMarket.Catalog.Infrastructure;
 using MiniMarket.Catalog.Infrastructure.Persistence;
+using MiniMarket.Infrastructure.Persistence;
 
 namespace MiniMarket.Catalog;
 
@@ -16,5 +17,5 @@ public static class CatalogModule
             .AddCatalogPresentation();
 
     public static Task MigrateCatalogDatabaseAsync(this WebApplication app) =>
-        app.Services.MigrateCatalogDatabaseAsync();
+        app.Services.MigrateDatabaseAsync<CatalogDbContext>();
 }
