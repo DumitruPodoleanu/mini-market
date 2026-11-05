@@ -1,5 +1,5 @@
 using MiniMarket.Catalog.Domain.Repositories;
-using MiniMarket.Catalog.Features.Common.Contracts;
+using MiniMarket.Catalog.Features.Common.Responses;
 using MiniMarket.Catalog.Features.Common.Mappings;
 using MiniMarket.Catalog.Features.Common.Errors;
 using MiniMarket.Catalog.Features.Common.Localization;

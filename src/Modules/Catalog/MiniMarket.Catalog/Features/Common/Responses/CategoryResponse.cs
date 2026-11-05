@@ -1,4 +1,4 @@
-namespace MiniMarket.Catalog.Features.Common.Contracts;
+namespace MiniMarket.Catalog.Features.Common.Responses;
 
 internal sealed record CategoryResponse(
     string Name,

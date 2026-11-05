@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using MiniMarket.Catalog.Domain.Entities;
 using MiniMarket.Catalog.Domain.Repositories;
 using MiniMarket.Catalog.Features.Common;
-using MiniMarket.Catalog.Features.Common.Contracts;
+using MiniMarket.Catalog.Features.Common.Responses;
 using MiniMarket.Catalog.Features.Common.Errors;
 using MiniMarket.Catalog.Features.Common.Localization;
 using MiniMarket.Catalog.Features.Common.Mappings;

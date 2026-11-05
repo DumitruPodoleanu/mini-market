@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using MiniMarket.Catalog.Features.Common.Contracts;
+using MiniMarket.Catalog.Features.Common.Responses;
 using MiniMarket.Infrastructure.Endpoints;
 using MiniMarket.Infrastructure.Http;
 

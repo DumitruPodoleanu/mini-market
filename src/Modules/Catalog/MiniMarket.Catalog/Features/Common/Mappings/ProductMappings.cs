@@ -1,7 +1,7 @@
 using MiniMarket.Catalog.Contracts;
 using MiniMarket.Catalog.Domain.Entities;
 using MiniMarket.Catalog.Domain.Entities.Slugs;
-using MiniMarket.Catalog.Features.Common.Contracts;
+using MiniMarket.Catalog.Features.Common.Responses;
 using MiniMarket.Catalog.Features.Common.Localization;
 using MiniMarket.Catalog.Features.Products.UpsertProduct;
 
