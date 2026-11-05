@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="MiniMarket.Shopping.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\MiniMarket.Shared\MiniMarket.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Shared\MiniMarket.Infrastructure\MiniMarket.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Catalog\MiniMarket.Catalog.Contracts\MiniMarket.Catalog.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

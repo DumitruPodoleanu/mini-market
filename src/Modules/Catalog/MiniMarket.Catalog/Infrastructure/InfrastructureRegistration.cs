@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -6,6 +5,7 @@ using MiniMarket.Catalog.Domain.Repositories;
 using MiniMarket.Catalog.Infrastructure.Persistence;
 using MiniMarket.Catalog.Infrastructure.Repositories;
 using MiniMarket.Catalog.Infrastructure.Seed;
+using MiniMarket.Infrastructure.Persistence;
 
 namespace MiniMarket.Catalog.Infrastructure;
 
@@ -21,12 +21,7 @@ internal static class InfrastructureRegistration
         services.AddDbContext<CatalogDbContext>((serviceProvider, options) =>
         {
             var databaseOptions = serviceProvider.GetRequiredService<IOptions<CatalogDatabaseOptions>>().Value;
-            options.UseNpgsql(databaseOptions.ConnectionString, npgsql =>
-            {
-                npgsql.MigrationsHistoryTable("__EFMigrationsHistory", CatalogDbContext.Schema);
-                npgsql.CommandTimeout(databaseOptions.CommandTimeoutSeconds);
-                npgsql.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
-            });
+            options.UseModuleDatabase(databaseOptions, CatalogDbContext.Schema);
             options.UseSeeding((context, _) => CatalogSeed.Seed(context));
             options.UseAsyncSeeding((context, _, cancellationToken) => CatalogSeed.SeedAsync(context, cancellationToken));
         });

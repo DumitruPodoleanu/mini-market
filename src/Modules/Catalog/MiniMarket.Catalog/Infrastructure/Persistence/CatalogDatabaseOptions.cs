@@ -1,14 +1,8 @@
-using System.ComponentModel.DataAnnotations;
+using MiniMarket.Infrastructure.Persistence;
 
 namespace MiniMarket.Catalog.Infrastructure.Persistence;
 
-internal sealed class CatalogDatabaseOptions
+internal sealed class CatalogDatabaseOptions : ModuleDatabaseOptions
 {
     public const string SectionName = "CatalogDatabase";
-
-    public int CommandTimeoutSeconds { get; set; }
-    public int MaxRetryCount { get; set; }
-
-    [Required]
-    public string ConnectionString { get; set; } = string.Empty;
 }
