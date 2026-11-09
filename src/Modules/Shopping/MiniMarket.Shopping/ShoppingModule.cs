@@ -13,7 +13,7 @@ public static class ShoppingModule
     public static IServiceCollection AddShoppingModule(this IServiceCollection services, IConfiguration configuration) =>
         services
             .AddShoppingInfrastructure(configuration)
-            .AddShoppingServices()
+            .AddShoppingServices(configuration)
             .AddShoppingPresentation();
 
     public static Task MigrateShoppingDatabaseAsync(this WebApplication app) =>

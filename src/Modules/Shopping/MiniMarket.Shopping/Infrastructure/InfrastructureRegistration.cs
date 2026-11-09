@@ -25,6 +25,7 @@ internal static class InfrastructureRegistration
 
         services.AddScoped<IShoppingDbContext>(serviceProvider => serviceProvider.GetRequiredService<ShoppingDbContext>());
         services.AddScoped<IWishlistRepository, WishlistRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
 
         return services;
     }

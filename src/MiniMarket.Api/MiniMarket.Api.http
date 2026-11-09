@@ -125,3 +125,67 @@ Content-Type: application/json
 # 204 with no body; the product's slug row is deleted with it
 # Sending it a second time gives 404, because the product is gone
 DELETE {{baseUrl}}/api/products/{{createProduct.response.body.$.data.slug}}
+
+### Wishlist: save a product
+# 204 with no body; sending it a second time is also 204 and adds nothing
+PUT {{baseUrl}}/api/wishlist/casti-sony-wh-1000xm5
+
+### Wishlist: save a second product
+# 204
+PUT {{baseUrl}}/api/wishlist/macbook-pro-14-m4-pro
+
+### Wishlist: list
+# 200: newest first, with live name and price, available = true
+GET {{baseUrl}}/api/wishlist
+
+### Wishlist: list in Russian
+# 200: the headphones are named in Russian
+GET {{baseUrl}}/api/wishlist
+Accept-Language: ru
+
+### Wishlist: second page of one item per page
+# 200: the headphones; page 2, pageSize 1, totalItems 2, totalPages 2
+GET {{baseUrl}}/api/wishlist?page=2&pageSize=1
+
+### Wishlist: remove
+# 204 with no body; sending it a second time gives 404
+DELETE {{baseUrl}}/api/wishlist/casti-sony-wh-1000xm5
+
+### Cart: add a product
+# 204 with no body
+PUT {{baseUrl}}/api/cart/items/macbook-pro-14-m4-pro
+Content-Type: application/json
+
+{
+  "quantity": 2
+}
+
+### Cart: add a second product
+# 204
+PUT {{baseUrl}}/api/cart/items/samsung-galaxy-buds3-pro
+Content-Type: application/json
+
+{
+  "quantity": 1
+}
+
+### Cart: change the quantity
+# 204: the quantity becomes 3, it does not add to the previous 2
+PUT {{baseUrl}}/api/cart/items/macbook-pro-14-m4-pro
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### Cart: read
+# 200: two lines with live prices, total = 3 * 41999 + 3999 = 129996
+GET {{baseUrl}}/api/cart
+
+### Cart: remove a product
+# 204 with no body; sending it a second time gives 404
+DELETE {{baseUrl}}/api/cart/items/samsung-galaxy-buds3-pro
+
+### Cart: clear
+# 204 with no body; clearing an empty cart is also 204
+DELETE {{baseUrl}}/api/cart

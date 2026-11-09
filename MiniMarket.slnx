@@ -16,5 +16,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/MiniMarket.Catalog.Tests/MiniMarket.Catalog.Tests.csproj" />
+    <Project Path="tests/MiniMarket.Shopping.Tests/MiniMarket.Shopping.Tests.csproj" />
   </Folder>
 </Solution>

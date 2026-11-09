@@ -11,6 +11,11 @@ internal sealed class WishlistRepository(IShoppingDbContext dbContext) : Reposit
     public Task<WishlistItemEntity?> GetAsync(Guid userId, Guid productId, CancellationToken cancellationToken) =>
         Entities.FirstOrDefaultAsync(w => w.UserId == userId && w.ProductId == productId, cancellationToken);
 
+    public async Task<bool> DeleteAsync(Guid userId, Guid productId, CancellationToken cancellationToken) =>
+        await Entities
+            .Where(w => w.UserId == userId && w.ProductId == productId)
+            .ExecuteDeleteAsync(cancellationToken) > 0;
+
     public async Task<(IReadOnlyList<WishlistItemEntity> Items, int TotalItems)> GetPageAsync(
         Guid userId,
         int page,

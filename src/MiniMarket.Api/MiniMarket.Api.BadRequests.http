@@ -208,3 +208,97 @@ Content-Type: application/json
 ### Delete a product that does not exist
 # 404: errors = ["Product with slug 'no-such-product' was not found."]
 DELETE {{baseUrl}}/api/products/{{missingSlug}}
+
+### Wishlist: save a product that does not exist
+# 404: errors = ["Product with slug 'no-such-product' was not found."]
+PUT {{baseUrl}}/api/wishlist/{{missingSlug}}
+
+### Wishlist: save an unpublished product
+# 409: errors = ["Product with slug 'ceas-apple-watch-series-10' is not available."]
+PUT {{baseUrl}}/api/wishlist/ceas-apple-watch-series-10
+
+### Wishlist: remove a product that is not saved
+# 404: errors = ["Product with slug 'ipad-air-11-m3' is not in the wishlist."]
+DELETE {{baseUrl}}/api/wishlist/ipad-air-11-m3
+
+### Wishlist: page below 1
+# 400: errors = ["Page must be at least 1."]
+GET {{baseUrl}}/api/wishlist?page=0
+
+### Wishlist: page too large
+# 400: errors = ["Page cannot exceed 21474836."]
+GET {{baseUrl}}/api/wishlist?page=2147483647
+
+### Wishlist: page size above the maximum
+# 400: errors = ["Page size must be between 1 and 100."]
+GET {{baseUrl}}/api/wishlist?pageSize=101
+
+### Cart: no body
+# 400: errors = ["Request body is required."]
+PUT {{baseUrl}}/api/cart/items/ipad-air-11-m3
+
+### Cart: quantity missing
+# 400: errors = ["Quantity is required."]
+PUT {{baseUrl}}/api/cart/items/ipad-air-11-m3
+Content-Type: application/json
+
+{
+}
+
+### Cart: quantity below 1
+# 400: errors = ["Quantity must be between 1 and 99."]
+PUT {{baseUrl}}/api/cart/items/ipad-air-11-m3
+Content-Type: application/json
+
+{
+  "quantity": 0
+}
+
+### Cart: quantity above the maximum
+# 400: errors = ["Quantity must be between 1 and 99."]
+PUT {{baseUrl}}/api/cart/items/ipad-air-11-m3
+Content-Type: application/json
+
+{
+  "quantity": 100
+}
+
+### Cart: add a product that does not exist
+# 404: errors = ["Product with slug 'no-such-product' was not found."]
+PUT {{baseUrl}}/api/cart/items/{{missingSlug}}
+Content-Type: application/json
+
+{
+  "quantity": 1
+}
+
+### Cart: add an unpublished product
+# 409: errors = ["Product with slug 'ceas-apple-watch-series-10' is not available."]
+PUT {{baseUrl}}/api/cart/items/ceas-apple-watch-series-10
+Content-Type: application/json
+
+{
+  "quantity": 1
+}
+
+### Cart: quantity above the stock
+# 409: errors = ["Only 3 of product 'macbook-pro-14-m4-pro' are in stock."]
+PUT {{baseUrl}}/api/cart/items/macbook-pro-14-m4-pro
+Content-Type: application/json
+
+{
+  "quantity": 4
+}
+
+### Cart: product out of stock
+# 409: errors = ["Only 0 of product 'xiaomi-redmi-note-14-pro' are in stock."]
+PUT {{baseUrl}}/api/cart/items/xiaomi-redmi-note-14-pro
+Content-Type: application/json
+
+{
+  "quantity": 1
+}
+
+### Cart: remove a product that is not in the cart
+# 404: errors = ["Product with slug 'ipad-air-11-m3' is not in the cart."]
+DELETE {{baseUrl}}/api/cart/items/ipad-air-11-m3
